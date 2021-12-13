@@ -1,0 +1,30 @@
+swagger: '2.0'
+info:
+  description: simple api
+  title: international exchanges
+  version: v1
+  
+host: localhost:8080
+schemes:
+  - https
+basePath: /
+paths:
+  /:
+    get:
+      summary: Get client IP
+      parameters:
+        - in: query
+          name: format
+          type: string
+          description: 'The format to return the response in, i.e. json.'
+          default: json
+      responses:
+        '200':
+          description: Success response
+          schema:
+            type: object
+            properties:
+              ip:
+                type: string
+                example: 88.68.10.107
+
