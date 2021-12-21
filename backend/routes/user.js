@@ -7,27 +7,9 @@ pool.connect();
 
 router.use(cors());
 
-router.post('/new/:id/:name/:mdp',async (req,res) => {
+router.post('/new/:id/:name/:password',async (req,res) => {
     try {
-        await pool.query("INSERT INTO users(id,name,mdp) VALUES ($1,$2,$3);",[req.params.id,req.params.name,req.params.mdp]);
-        res.end();
-    } catch (error) {
-        console.error(error);
-    }
-});
-
-router.put('/change_mdp/:id/:new', async (req,res) => {
-    try {
-        await pool.query('UPDATE users SET mdp = ($2) WHERE id = ($1);',[req.params.id,req.params.new]);
-        res.end();
-    } catch (error) {
-        console.error(error);
-    }
-});
-
-router.put('/change_username/:id/:new', async (req,res) => {
-    try {
-        await pool.query("UPDATE users SET name = ($2) WHERE id = ($1);",[req.params.id,req.params.new]);
+        await pool.query("INSERT INTO users(id,name,password) VALUES ($1,$2,$3);",[req.params.id,req.params.name,req.params.password]);
         res.end();
     } catch (error) {
         console.error(error);
