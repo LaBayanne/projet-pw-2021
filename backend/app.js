@@ -7,8 +7,8 @@ var cors = require('cors');
 
 
 var indexRouter = require('./routes/index');
-const echange = require("./routes/echange");
-const user = require("./routes/echange")
+const exchange = require("./routes/exchange");
+const user = require("./routes/user")
 
 var app = express();
 
@@ -25,7 +25,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 //app.use('/', indexRouter);
-app.use("/echange",echange);
+app.use("/exchange",exchange);
 app.use("/user",user);
 
 

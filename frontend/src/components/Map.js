@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 import './Map.css';
 import Bar from './Bar';
-import EchangeService from '../services/EchangeService';
+import ExchangeService from '../services/ExchangeService';
 
 
 const containerStyle = {
@@ -49,13 +49,13 @@ function Map(props) {
         setMap(null)
     }, [])
     
-    const setEchanges = (data) => {
+    const setExchanges = (data) => {
         console.log("SET ECHANGES" + data);
+        
     }
 
     useEffect(() => {
-        EchangeService.insertNewEchange();
-        EchangeService.getAllEchanges(setEchanges);
+        ExchangeService.getAllExchanges(setExchanges);
     }, [])
 
 

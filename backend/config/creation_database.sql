@@ -2,7 +2,7 @@ sudo -u postgres psql
 
 CREATE DATABASE erasmus;
 
-CREATE TABLE echange (
+CREATE TABLE exchange (
     id VARCHAR(255) NOT NULL PRIMARY KEY,
     person_name VARCHAR(255) NOT NULL,
     starting_date VARCHAR(255) NOT NULL ,
