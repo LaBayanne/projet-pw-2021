@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 import './Map.css';
 import Bar from './Bar';
+import ExchangeService from '../services/ExchangeService';
 
 
 const containerStyle = {
@@ -47,6 +48,16 @@ function Map(props) {
     const onUnmount = React.useCallback(function callback(map) {
         setMap(null)
     }, [])
+    
+    const setExchanges = (data) => {
+        console.log("SET ECHANGES" + data);
+        
+    }
+
+    useEffect(() => {
+        ExchangeService.getAllExchanges(setExchanges);
+    }, [])
+
 
     const drawArrowBetweenLocations = (latFrom, lngFrom, latTo, lngTo) => {
         const lineSymbol = {

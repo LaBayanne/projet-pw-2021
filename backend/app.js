@@ -8,7 +8,7 @@ var cors = require('cors');
 
 var indexRouter = require('./routes/index');
 const echange = require("./routes/exchange");
-const user = require("./routes/account")
+const account = require("./routes/account")
 
 var app = express();
 
@@ -25,7 +25,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 //app.use('/', indexRouter);
-app.use("/echange",echange);
+app.use("/exchange",exchange);
 app.use("/user",user);
 
 
@@ -45,6 +45,6 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-app.listen(3000, () => console.log("Listening on 3000"));
+app.listen(3001, () => console.log("Listening on 3001"));
 
 module.exports = app;
