@@ -7,16 +7,13 @@ import ExchangeService from '../services/ExchangeService';
 
 const containerStyle = {
     width: '100%',
-    height: '800px'
+    height: '800px',
+    position: "relative"
 };
 
 const parisLatLng = { // Louvres
     lat: 48.8610174,
     lng: 2.3358584
-};
-const bordeauxLatLng = { // Louvres
-    lat: 44.836151,
-    lng: -0.580816
 };
 
 const options = {
@@ -60,6 +57,7 @@ function Map(props) {
 
 
     const drawArrowBetweenLocations = (latFrom, lngFrom, latTo, lngTo) => {
+        console.log("( " + latFrom + ", " + lngFrom + " ) -> ( " + latTo + ", " + lngTo + " )");
         const lineSymbol = {
             path: window.google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
         };
@@ -88,8 +86,11 @@ function Map(props) {
             onLoad={onLoad}
             onUnmount={onUnmount}>
             { /* Child components, such as markers, info windows, etc. */ }
-            <Bar drawLine={drawArrowBetweenLocations}/>
         </GoogleMap>
+            <Bar drawLine={drawArrowBetweenLocations} from="Paris" to="Bordeaux"/>
+            <Bar drawLine={drawArrowBetweenLocations} from="Londres" to="Toulouse"/>
+            <Bar drawLine={drawArrowBetweenLocations} from="New York" to="Moscou"/>
+            <Bar drawLine={drawArrowBetweenLocations} from="Tokyo" to="Syndey"/>
         </div>) 
         : 
         <></>

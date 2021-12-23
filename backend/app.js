@@ -7,7 +7,7 @@ var cors = require('cors');
 
 
 var indexRouter = require('./routes/index');
-const echange = require("./routes/exchange");
+const exchange = require("./routes/exchange");
 const account = require("./routes/account")
 
 var app = express();
@@ -26,7 +26,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //app.use('/', indexRouter);
 app.use("/exchange",exchange);
-app.use("/user",user);
+app.use("/account",account);
 
 
 // catch 404 and forward to error handler
