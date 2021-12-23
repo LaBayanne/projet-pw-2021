@@ -1,10 +1,26 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
+
+import GeocodeService from '../services/GeocodeService';
 
 export default function Bar(props) {
 
-    useEffect(() => {
-        props.drawLine(48.8610174, 2.3358584, 44.836151,-0.580816);
-    })
+    const [latFrom, setLatFrom] = useState(10);
+    const [lngFrom, setLngFrom] = useState();
+    const [latTo, setLatTo] = useState();
+    const [lngTo, setLngTo] = useState();
 
-    return <p> BAR </p>
+    useEffect(() => {
+        GeocodeService.getLatLngFromCity((lat, lng) => {setLatFrom(lat); setLngFrom(lng)}, props.from);
+        GeocodeService.getLatLngFromCity((lat, lng) => {setLatTo(lat); setLngTo(lng)}, props.to);
+    }, [])
+
+    const printPolyline = (evt) => {
+        console.log("( " + latFrom + ", " + lngFrom + " ) -> ( " + latTo + ", " + lngTo + " )");
+        props.drawLine(latFrom, lngFrom, latTo, lngTo);
+    }
+
+
+
+    return <button onClick={printPolyline} >{props.from} to {props.to}</button>
+
 }
