@@ -10,7 +10,7 @@ router.use(cors());
 //Get all colonne from a kanban
 router.get('/all', async (req,res) => {
     try {
-        const response = await pool.query("SELECT * FROM echange;");
+        const response = await pool.query("SELECT * FROM exchange;");
         res.send(response.rows)
     } catch (error) {
         console.error(error);

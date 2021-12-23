@@ -7,8 +7,8 @@ var cors = require('cors');
 
 
 var indexRouter = require('./routes/index');
-const echange = require("./routes/echange");
-const user = require("./routes/echange")
+const echange = require("./routes/exchange");
+const user = require("./routes/account")
 
 var app = express();
 
