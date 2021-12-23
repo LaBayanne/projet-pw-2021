@@ -1,0 +1,7 @@
+.Info{
+    display: flex;
+    background-color: rgba(112, 128, 144, 0.973);
+    width : 25%;
+    height : 800px;
+    float: left;
+}

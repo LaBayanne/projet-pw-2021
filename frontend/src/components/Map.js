@@ -1,6 +1,6 @@
 import React from 'react'
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
-
+import './Map.css';
 import Bar from './Bar';
 
 
@@ -69,7 +69,8 @@ function Map(props) {
     }
 
     return isLoaded ? 
-        (<GoogleMap
+        (<div className ="map">
+        <GoogleMap
             mapContainerStyle={containerStyle}
             options={options}
             center={parisLatLng}
@@ -77,7 +78,8 @@ function Map(props) {
             onUnmount={onUnmount}>
             { /* Child components, such as markers, info windows, etc. */ }
             <Bar drawLine={drawArrowBetweenLocations}/>
-        </GoogleMap>) 
+        </GoogleMap>
+        </div>) 
         : 
         <></>
 }
