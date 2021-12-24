@@ -1,11 +1,25 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import Banner from './components/Banner';
 import Map from './components/Map';
 import Info from './components/Info';
-import Bar from './components/Bar';
+import ExchangeService from './services/ExchangeService';
 
 function App() {
+
+  const [exchanges, setExchanges] = useState([]);
+
+  const onExchangesGot = (data) => {
+    /*console.log("EXCHANGES : ");
+    data.forEach(element => {
+      console.log(JSON.stringify(element));
+    });*/
+    setExchanges(data);
+  }
+
+  useEffect(() => {
+      ExchangeService.getAllExchanges(onExchangesGot);
+  }, [])
 
   return (
     
@@ -20,7 +34,7 @@ function App() {
     <div className="App">
         <Banner/>
         <Info/>
-        <Map/>
+        <Map exchanges={exchanges}/>
     </div>
 
     </div>

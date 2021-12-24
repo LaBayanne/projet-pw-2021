@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 import './Map.css';
-import Bar from './Bar';
-import ExchangeService from '../services/ExchangeService';
+import GeocodeService from '../services/GeocodeService';
+
 
 
 const containerStyle = {
@@ -45,19 +45,8 @@ function Map(props) {
     const onUnmount = React.useCallback(function callback(map) {
         setMap(null)
     }, [])
-    
-    const setExchanges = (data) => {
-        console.log("SET ECHANGES" + data);
-        
-    }
-
-    useEffect(() => {
-        ExchangeService.getAllExchanges(setExchanges);
-    }, [])
-
 
     const drawArrowBetweenLocations = (latFrom, lngFrom, latTo, lngTo) => {
-        console.log("( " + latFrom + ", " + lngFrom + " ) -> ( " + latTo + ", " + lngTo + " )");
         const lineSymbol = {
             path: window.google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
         };
@@ -75,7 +64,20 @@ function Map(props) {
             ],
             map: map,
         });
+        line.setOptions({strokeWeight: 5});
     }
+
+    useEffect(() => {
+        (async () => {
+            //console.log("MAP : ");
+            props.exchanges.forEach(async element => {
+                //console.log(JSON.stringify(element));
+                const from = await GeocodeService.getLatLngFromCity(element.city_origin, element.country_origin);
+                const to = await GeocodeService.getLatLngFromCity(element.city_destination, element.country_destination);
+                drawArrowBetweenLocations(from.lat, from.lng, to.lat, to.lng);
+            });
+        })();
+    }, [props.exchanges])
 
     return isLoaded ? 
         (<div className ="map">
@@ -87,10 +89,6 @@ function Map(props) {
             onUnmount={onUnmount}>
             { /* Child components, such as markers, info windows, etc. */ }
         </GoogleMap>
-            <Bar drawLine={drawArrowBetweenLocations} from="Paris" to="Bordeaux"/>
-            <Bar drawLine={drawArrowBetweenLocations} from="Londres" to="Toulouse"/>
-            <Bar drawLine={drawArrowBetweenLocations} from="New York" to="Moscou"/>
-            <Bar drawLine={drawArrowBetweenLocations} from="Tokyo" to="Syndey"/>
         </div>) 
         : 
         <></>

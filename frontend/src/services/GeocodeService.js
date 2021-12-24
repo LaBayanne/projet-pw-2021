@@ -1,4 +1,5 @@
 import Geocode from "react-geocode";
+const { getCode, getName } = require('country-list');
 
 Geocode.setApiKey("AIzaSyAKU87Du9iSuECGdoERw6lJbikZvmRdLmg");
 
@@ -19,13 +20,14 @@ Geocode.setLocationType("ROOFTOP");
 
 export default class GeocodeService {
 
-    static getLatLngFromCity(callback, city_name) {
+    static async getLatLngFromCity(city_name, country_name) {
+        const code = getCode(country_name);
+        //console.log("country_name : " + country_name + ", code : " + code);
+        Geocode.setRegion(getCode(country_name));
         // Get latitude & longitude from address.
-        Geocode.fromAddress(city_name)
+        return await Geocode.fromAddress(city_name)
             .then(res => {
-                const { lat, lng } = res.results[0].geometry.location;
-                //console.log(lat + ", " + lng);
-                callback(lat, lng);
+                return res.results[0].geometry.location;
             },)
             .catch(err => console.log(err))
     }
