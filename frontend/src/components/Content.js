@@ -1,9 +1,27 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import './Content.css';
 import Map from './Map';
 import Info from './Info';
+import ExchangeService from '../services/ExchangeService';
+
+
 
 function Content() {
+
+  const [exchanges, setExchanges] = useState([]);
+
+  const onExchangesGot = (data) => {
+    /*console.log("EXCHANGES : ");
+    data.forEach(element => {
+      console.log(JSON.stringify(element));
+    });*/
+    setExchanges(data);
+  }
+
+  useEffect(() => {
+      ExchangeService.getAllExchanges(onExchangesGot);
+  }, [])
+
     return (
       <div
         style={{
