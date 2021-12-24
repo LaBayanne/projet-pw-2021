@@ -18,7 +18,7 @@ function Content() {
           <div id="groupBox">
             <div id="groupBox2">
               <Info id="Info"/>
-              <Map id="Map"/>
+              <Map id="Map" exchanges={exchanges}/>
             </div>
           </div>
         </div>
