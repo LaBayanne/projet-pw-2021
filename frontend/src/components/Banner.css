@@ -3,6 +3,7 @@
     justify-content: space-between;
     background-color: rgba(112, 128, 144, 0.973);
     height: 250px;
+    border-bottom: solid 1px;
 }
 
 .title{

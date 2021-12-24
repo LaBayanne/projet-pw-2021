@@ -7,10 +7,19 @@ pool.connect();
 
 router.use(cors());
 
-router.post('/isAccount/:name/:password', async (req,res) => {
+router.get('/isAccount', async (req,res) => {
     try {
-        const response = await pool.query("SELECT * from account where name=($1) and password=($2);",[req.params.name,req.params.password]);
+        const response = await pool.query("SELECT * from account;");
         res.send(response.rows);
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+router.post('/createAccount/:name/:password', async (req, res) => {
+    try {
+        await pool.query("INSERT INTO account (name,password) VALUES ($1,$2);",[req.params.name, req.params.password]);
+        res.end();
     } catch (error) {
         console.error(error);
     }

@@ -1,0 +1,19 @@
+#Content{
+    background-color: #6F7D8C;
+}
+
+#groupBox{
+    background-color: #6F7D8C;
+    margin: 2%;
+    border: solid 1px;
+    border-color: black;
+    border-radius: 5px;
+    height:900px;
+}
+
+#groupBox2{
+    margin: 2%;
+    background-color: #6F7D8C;
+    display: flex;
+}
+

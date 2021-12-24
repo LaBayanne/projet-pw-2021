@@ -1,0 +1,24 @@
+.Login{
+    margin: 1%;
+    border: solid 1px;
+    border-radius: 10px;
+    width: 20%;
+    background-color: #A7A7A9;
+}
+
+#loginInput{
+    margin-top: 15%;
+    border-radius: 5px;
+}
+
+#passwordInput{
+    border-radius: 5px;
+}
+
+#loginLabel{
+    width:90%;
+}
+
+#passwordLabel{
+    width:90%
+}

@@ -5,7 +5,10 @@ import './Info.css';
 function Info() {
 
   return (
-    <div className = "Info"><p>info échanges : </p></div>
+    <div className = "Info">
+      <p>info échanges : </p>
+      <p> test </p>
+    </div>
     
   );
 }

@@ -1,14 +1,12 @@
 import React from 'react';
 import './App.css';
 import Banner from './components/Banner';
-import Map from './components/Map';
-import Info from './components/Info';
+import Content from './components/Content';
 import Bar from './components/Bar';
 
 function App() {
 
   return (
-    
     <div
       style={{
         position: "absolute",
@@ -19,8 +17,7 @@ function App() {
     >
     <div className="App">
         <Banner/>
-        <Info/>
-        <Map/>
+        <Content/>
     </div>
 
     </div>
