@@ -17,3 +17,8 @@
     display: flex;
 }
 
+#Out,#In{
+    border: solid 1px;
+    border-color: black;
+    border-radius: 5px;
+}
