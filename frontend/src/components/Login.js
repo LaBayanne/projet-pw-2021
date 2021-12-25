@@ -2,9 +2,11 @@ import React, {useState} from 'react';
 import AccountService from '../services/AccountService';
 import './Login.css';
 
-export function Login(props, {logged,setLogged}) {
+export function Login({logged,setLogged}) {
     const [login, setLogin] = useState("");
     const [mdp, setMdp] = useState("");
+
+    console.log(logged);
 
     function isAccountRegistered(res){
       let found = false;
@@ -17,12 +19,17 @@ export function Login(props, {logged,setLogged}) {
       }
 
       if(found === true){
-        console.log("Account found");
-        setLogged(true);
-        if(logged === true)
+        console.log("found");
+
+        if(logged){
           console.log("true");
-        else
+        }else{
           console.log("false");
+        }
+        console.log("Aya");
+
+        setLogged(true);
+        
       }
     }
 

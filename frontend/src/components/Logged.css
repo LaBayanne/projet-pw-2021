@@ -1,0 +1,10 @@
+.Logged{
+    border-bottom: solid 1px;
+    border-left: solid 1px;
+    border-radius: 5px;
+    margin-bottom: 8%;
+}
+
+#loggedText{
+    margin: 2%;
+}

@@ -6,7 +6,7 @@ function Logged() {
 
   return (
     <div className = "Logged">
-      <h1> test </h1>
+      <p id="loggedText"> Connected as: Benjamin </p>
     </div>
     
   );

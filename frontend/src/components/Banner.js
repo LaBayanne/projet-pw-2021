@@ -7,7 +7,6 @@ import Logged from './Logged';
 function Banner({logged,setLogged}) {
 
   return (
-    
     <div className="Banner">
         <Title/>
         {logged === false ? <Login logged={logged} setLogged={setLogged}/> : <Logged/>}
