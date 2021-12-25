@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
 import AccountService from '../services/AccountService';
 import './Login.css';
+import Status from './ConnectionState';
 
-export function Login({logged,setLogged}) {
+export function Login({status,setStatus,logged,setLogged}) {
     const [login, setLogin] = useState("");
     const [mdp, setMdp] = useState("");
 
@@ -29,7 +30,7 @@ export function Login({logged,setLogged}) {
         console.log("Aya");
 
         setLogged(true);
-        
+        setStatus(Status.Connected);
       }
     }
 
