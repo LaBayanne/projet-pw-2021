@@ -2,7 +2,7 @@ import React from 'react';
 import './Logged.css';
 import Status from './ConnectionState';
 
-function Logged({status,setStatus,logged,setLogged}) {
+function Logged({status,setStatus,logged,setLogged,username,setUsername}) {
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
@@ -15,7 +15,7 @@ function Logged({status,setStatus,logged,setLogged}) {
 
   return (
     <div className = "Logged">
-      <p id="loggedText"> Connected as: Benjamin </p>
+      <p id="loggedText"> Connected as: {username} </p>
       <button onClick={handleSubmit}> Disconnect </button>
     </div>
     

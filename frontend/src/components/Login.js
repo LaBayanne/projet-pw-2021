@@ -3,7 +3,7 @@ import AccountService from '../services/AccountService';
 import './Login.css';
 import Status from './ConnectionState';
 
-export function Login({status,setStatus,logged,setLogged}) {
+export function Login({status,setStatus,logged,setLogged,username,setUsername}) {
     const [login, setLogin] = useState("");
     const [mdp, setMdp] = useState("");
 
@@ -20,16 +20,8 @@ export function Login({status,setStatus,logged,setLogged}) {
       }
 
       if(found === true){
-        console.log("found");
-
-        if(logged){
-          console.log("true");
-        }else{
-          console.log("false");
-        }
-        console.log("Aya");
-
         setLogged(true);
+        setUsername(login);
         setStatus(Status.Connected);
       }
     }
@@ -45,7 +37,7 @@ export function Login({status,setStatus,logged,setLogged}) {
 
     const redirectToSignUp = (evt) => {
       evt.preventDefault();
-
+      
       setStatus(Status.SignUp);
     }
 

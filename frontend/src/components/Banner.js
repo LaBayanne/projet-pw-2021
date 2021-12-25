@@ -6,15 +6,16 @@ import Logged from './Logged';
 import Status from './ConnectionState';
 import SignUp from './SignUp';
 
-function Banner({logged,setLogged}) {
+function Banner({logged,setLogged, username, setUsername}) {
 
   const [status, setStatus] = useState(Status.SignIn);
 
+
   let componentSwitch;
   if(status === Status.Connected)
-    componentSwitch = <Logged status={status} setStatus={setStatus} logged={logged} setLogged={setLogged}/>;
+    componentSwitch = <Logged status={status} setStatus={setStatus} logged={logged} setLogged={setLogged} username={username} setUsername={setUsername}/>;
   if(status === Status.SignIn)
-    componentSwitch = <Login status={status} setStatus={setStatus} logged={logged} setLogged={setLogged}/>;
+    componentSwitch = <Login status={status} setStatus={setStatus} logged={logged} setLogged={setLogged} username={username} setUsername={setUsername}/>;
   if(status === Status.SignUp)
     componentSwitch = <SignUp status={status} setStatus={setStatus} logged={logged} setLogged={setLogged}/>;
 
