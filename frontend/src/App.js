@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState} from 'react';
 import './App.css';
 import Banner from './components/Banner';
 import Content from './components/Content';
 
 function App() {
+
+  const [logged, setLogged] = useState(false);
 
   return (
     <div
@@ -15,7 +17,7 @@ function App() {
       }}
     >
     <div className="App">
-        <Banner/>
+        <Banner logged={logged} setLogged={setLogged}/>
         <Content/>
     </div>
 
