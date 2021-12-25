@@ -43,8 +43,15 @@ export function Login({status,setStatus,logged,setLogged}) {
       setMdp("");
     }
 
+    const redirectToSignUp = (evt) => {
+      evt.preventDefault();
+
+      setStatus(Status.SignUp);
+    }
+
     return (
         <form onSubmit={handleSubmit} className="Login">
+          <h1> Sign In </h1>
           <label id="loginLabel">
             Login:
             <input
@@ -63,6 +70,7 @@ export function Login({status,setStatus,logged,setLogged}) {
                 onChange={e => setMdp(e.target.value)} />
           </label>
           <input type="submit" value="Submit" />
+          <button onClick={redirectToSignUp}> Sign up ?</button>
         </form>
       );
 

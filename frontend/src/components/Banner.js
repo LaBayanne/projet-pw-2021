@@ -4,6 +4,7 @@ import Login from './Login';
 import Title from './Title';
 import Logged from './Logged';
 import Status from './ConnectionState';
+import SignUp from './SignUp';
 
 function Banner({logged,setLogged}) {
 
@@ -15,7 +16,7 @@ function Banner({logged,setLogged}) {
   if(status === Status.SignIn)
     componentSwitch = <Login status={status} setStatus={setStatus} logged={logged} setLogged={setLogged}/>;
   if(status === Status.SignUp)
-    console.log("todo");
+    componentSwitch = <SignUp status={status} setStatus={setStatus} logged={logged} setLogged={setLogged}/>;
 
   return (
     <div className="Banner">
