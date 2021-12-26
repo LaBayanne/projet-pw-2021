@@ -51,26 +51,24 @@ export function Login({status,setStatus,logged,setLogged}) {
 
     return (
         <form onSubmit={handleSubmit} className="Login">
-          <h1> Sign In </h1>
-          <label id="loginLabel">
-            Login:
+          <h2> Sign In </h2>
             <input
               type="text"
-              id = "loginInput"
+              id = "Input"
+              placeholder = "Login"
               value={login}
               onChange={e => setLogin(e.target.value)}
             />
-          </label>
-          <label id="passwordLabel"> 
-              Mdp :
-              <input 
-                type="password" 
-                id = "passwordInput"
-                value ={mdp}  
-                onChange={e => setMdp(e.target.value)} />
-          </label>
-          <input type="submit" value="Submit" />
-          <button onClick={redirectToSignUp}> Sign up ?</button>
+            <br/>
+            <input 
+              type="password" 
+              id = "Input"
+              placeholder="Password"
+              value ={mdp}  
+              onChange={e => setMdp(e.target.value)} 
+            /><br/>
+          <input type="submit" value="Submit" id="submit"/>
+          <button id ="sign-up" onClick={redirectToSignUp}> Sign up ?</button>
         </form>
       );
 
