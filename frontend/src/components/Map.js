@@ -3,7 +3,10 @@ import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 import './Map.css';
 import GeocodeService from '../services/GeocodeService';
 
-
+const countryFLowMinZoom = 4;
+const meanCountAtCityLevel = 10;
+const meanCountAtCountryLevel = 100;
+const meanStrokeWeight = 5;
 
 const containerStyle = {
     width: '100%',
@@ -22,7 +25,7 @@ const options = {
     mapTypeControl: false,
     defaultZoom: 3,
     minZoom: 3,
-    maxZoom: 7, 
+    maxZoom: 6, 
 };
 
 
@@ -35,10 +38,15 @@ function Map(props) {
     })
 
     const [map, setMap] = React.useState(null)
+    const [zoomLevel, setZoomLevel] = React.useState(options.defaultZoom);
+    const [arrows, setArrows] = React.useState([]);
 
     const onLoad = React.useCallback(function callback(map) {
         const bounds = new window.google.maps.LatLngBounds(parisLatLng);
         map.fitBounds(bounds);
+        window.google.maps.event.addListener(map, 'zoom_changed', function() {
+            setZoomLevel(map.getZoom());
+        });
         setMap(map)
     }, [])
 
@@ -46,7 +54,7 @@ function Map(props) {
         setMap(null)
     }, [])
 
-    const drawArrowBetweenLocations = (latFrom, lngFrom, latTo, lngTo) => {
+    const drawArrowBetweenLocations = (latFrom, lngFrom, latTo, lngTo, strokeWeight) => {
         const lineSymbol = {
             path: window.google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
         };
@@ -63,21 +71,105 @@ function Map(props) {
                 },
             ],
             map: map,
+            strokeWeight: strokeWeight
         });
-        line.setOptions({strokeWeight: 5});
+        setArrows(arrows => [...arrows, line]);
+    }
+
+    async function showCityFlow(){
+        let fromToDict = {};
+        const setAtNullCityDestination = (element) => {
+            fromToDict[element.country_origin][element.city_origin][element.country_destination][element.city_destination] = 1;
+        }
+        const setAtNullCountryDestination = (element) => {
+            fromToDict[element.country_origin][element.city_origin][element.country_destination] = {};
+            setAtNullCityDestination(element);
+        }
+        const setAtNullCityOrigin = (element) => {
+            fromToDict[element.country_origin][element.city_origin] = {};
+            setAtNullCountryDestination(element);
+        }
+        const setAtNullCountryOrigin = (element) => {
+            fromToDict[element.country_origin] = {};
+            setAtNullCityOrigin(element);
+        }
+        props.exchanges.forEach(async element => {
+            if(fromToDict[element.country_origin] == null){
+                setAtNullCountryOrigin(element);
+            }
+            else if (fromToDict[element.country_origin][element.city_origin] == null) {
+                setAtNullCityOrigin(element);
+            }
+            else if (fromToDict[element.country_origin][element.city_origin][element.country_destination] == null) {
+                setAtNullCountryDestination(element);
+            }
+            else if (fromToDict[element.country_origin][element.city_origin][element.country_destination][element.city_origin] == null) {
+                setAtNullCityDestination(element);
+            }
+            else {
+                fromToDict[element.country_origin][element.city_origin][element.country_destination][element.city_origin]++;
+            }
+        });
+        for (const [countryOrigin, countryFromValue] of Object.entries(fromToDict)) {
+            for (const [cityOrigin, cityFromValue] of Object.entries(countryFromValue)) {
+                for (const [countryDestination, countryDestinationValue] of Object.entries(cityFromValue)) {
+                    for (const [cityDestination, count] of Object.entries(countryDestinationValue)) {
+                        const from = await GeocodeService.getLatLngFromCity(cityOrigin, countryOrigin);
+                        const to = await GeocodeService.getLatLngFromCity(cityDestination, countryDestination);
+                        const strokeWeight = count / meanCountAtCityLevel * meanStrokeWeight;
+                        //console.log(countryOrigin, cityOrigin, countryDestination, cityDestination, count, strokeWeight);
+                        drawArrowBetweenLocations(from.lat, from.lng, to.lat, to.lng, strokeWeight);
+                    }
+                }
+            }
+        }
+    }
+
+    async function showCountryFlow(){
+        let fromToDict = {};
+        const setAtNullCountryDestination = (element) => {
+            fromToDict[element.country_origin][element.country_destination] = 1;
+        }
+        const setAtNullCountryOrigin = (element) => {
+            fromToDict[element.country_origin] = {};
+            setAtNullCountryDestination(element);
+        }
+        props.exchanges.forEach(async element => {
+            if(fromToDict[element.country_origin] == null){
+                setAtNullCountryOrigin(element);
+            }
+            else if (fromToDict[element.country_origin][element.country_destination] == null) {
+                setAtNullCountryDestination(element);
+            }
+            else {
+                fromToDict[element.country_origin][element.country_destination]++;
+            }
+        });
+        for (const [countryOrigin, countryFromValue] of Object.entries(fromToDict)) {
+            for (const [countryDestination, count] of Object.entries(countryFromValue)) {
+                const from = await GeocodeService.getLatLngFromCountry(countryOrigin);
+                const to = await GeocodeService.getLatLngFromCountry(countryDestination);
+                const strokeWeight = count / meanCountAtCountryLevel * meanStrokeWeight;
+                //console.log(countryOrigin, cityOrigin, countryDestination, cityDestination, count, strokeWeight);
+                drawArrowBetweenLocations(from.lat, from.lng, to.lat, to.lng, strokeWeight);
+            }
+        }
     }
 
     useEffect(() => {
         (async () => {
-            //console.log("MAP : ");
-            props.exchanges.forEach(async element => {
-                //console.log(JSON.stringify(element));
-                const from = await GeocodeService.getLatLngFromCity(element.city_origin, element.country_origin);
-                const to = await GeocodeService.getLatLngFromCity(element.city_destination, element.country_destination);
-                drawArrowBetweenLocations(from.lat, from.lng, to.lat, to.lng);
-            });
+            if(map != null){
+                if(zoomLevel <= countryFLowMinZoom) {
+                    arrows.forEach(element => element.setMap(null));
+                    setArrows([]);
+                    showCountryFlow();
+                }
+                else {
+                    showCityFlow();
+                }
+            }
         })();
-    }, [props.exchanges])
+    }, [props.exchanges, zoomLevel])
 
     return isLoaded ? 
         (<div className ="map">
