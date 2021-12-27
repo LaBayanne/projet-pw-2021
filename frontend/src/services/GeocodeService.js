@@ -1,5 +1,5 @@
 import Geocode from "react-geocode";
-const { getCode, getName } = require('country-list');
+const { getCode } = require('country-list');
 
 Geocode.setApiKey("AIzaSyAKU87Du9iSuECGdoERw6lJbikZvmRdLmg");
 
@@ -20,15 +20,45 @@ Geocode.setLocationType("ROOFTOP");
 
 export default class GeocodeService {
 
+    static cityAddress = {};
+    static countryAddress = {};
+    static countryCode = {};
+
     static async getLatLngFromCity(city_name, country_name) {
-        const code = getCode(country_name);
-        //console.log("country_name : " + country_name + ", code : " + code);
-        Geocode.setRegion(getCode(country_name));
+        if(this.cityAddress[city_name] != null)
+            return this.cityAddress[city_name];
+
+        let code;
+
+        if(this.countryCode[country_name] == null){
+            code = getCode(country_name);
+            this.countryCode[country_name] = code;
+        }
+        else{
+            code = this.countryCode[country_name];
+        }
+        Geocode.setRegion(code);
         // Get latitude & longitude from address.
-        return await Geocode.fromAddress(city_name)
+        const address = await Geocode.fromAddress(city_name)
             .then(res => {
                 return res.results[0].geometry.location;
             },)
             .catch(err => console.log(err))
+        this.cityAddress[city_name] = address;
+        return address;
+    }
+
+    static async getLatLngFromCountry(country_name) {
+        if(this.countryAddress[country_name] != null)
+            return this.countryAddress[country_name];
+
+        // Get latitude & longitude from address.
+        const address = await Geocode.fromAddress(country_name)
+            .then(res => {
+                return res.results[0].geometry.location;
+            },)
+            .catch(err => console.log(err))
+        this.countryAddress[country_name] = address;
+        return address;
     }
 }
