@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../config/db');
 const cors = require('cors');
+const bcrypt = require('bcrypt');
 
 pool.connect();
 
@@ -18,7 +19,9 @@ router.get('/isAccount', async (req,res) => {
 
 router.post('/createAccount/:name/:password', async (req, res) => {
     try {
-        await pool.query("INSERT INTO account (name,password) VALUES ($1,$2);",[req.params.name, req.params.password]);
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(res.params.password, salt);
+        await pool.query("INSERT INTO account (name,password) VALUES ($1,$2);",[req.params.name, hashedPassword]);
         res.end();
     } catch (error) {
         console.error(error);
