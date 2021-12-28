@@ -3,19 +3,25 @@ import './Content.css';
 import Map from './Map';
 import Info from './Info';
 import ExchangeService from '../services/ExchangeService';
+import Date from '../models/Date';
 
 
 
-function Content() {
+function Content(props) {
 
   const [exchanges, setExchanges] = useState([]);
+  const [currentExchanges, setCurrentExchanges] = useState([]);
 
   const onExchangesGot = (data) => {
-    /*console.log("EXCHANGES : ");
-    data.forEach(element => {
-      console.log(JSON.stringify(element));
-    });*/
     setExchanges(data);
+    setCurrentExchanges(data);
+  }
+
+  const setRange = (startDate, endDate) => {
+    const startDateObj = new Date(startDate);
+    const endDateObj = new Date(endDate);
+    setCurrentExchanges(exchanges.filter(element => (new Date(element.starting_date)).compareTo(startDateObj) >= 0 &&
+                            (new Date(element.ending_date)).compareTo(endDateObj) <= 0));
   }
 
   useEffect(() => {
@@ -35,8 +41,8 @@ function Content() {
         <div>
           <div id="groupBox">
             <div id="groupBox2">
-              <Info id="Info"/>
-              <Map id="Map" exchanges={exchanges}/>
+              <Info id="Info" setRange={setRange}/>
+              <Map id="Map" exchanges={currentExchanges}/>
             </div>
           </div>
         </div>

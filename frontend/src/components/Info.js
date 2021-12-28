@@ -9,7 +9,7 @@ import RadioGroup  from '@mui/material/RadioGroup';
 import { Radio } from '@mui/material';
 import NumericImput from 'react-numeric-input'
 
-function Info() {
+function Info(props) {
 
   const [checkedOne, setCheckedOne] = React.useState(false);
   const [checkedTwo, setCheckedTwo] = React.useState(false);
@@ -38,7 +38,7 @@ function Info() {
         <h5>Infos échanges : {"\n"}</h5>
         <br/><br/>
         <p>Select date début - fin : </p>
-        <Calendar/><br/><br/>
+        <Calendar setRange={props.setRange}/><br/><br/>
         <p>Flux : </p>
 
         <div id="CheckboxesFlux">
