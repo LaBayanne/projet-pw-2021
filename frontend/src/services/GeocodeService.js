@@ -1,5 +1,5 @@
 import Geocode from "react-geocode";
-const { getCode } = require('country-list');
+const { getCode, getNames } = require('country-list');
 
 Geocode.setApiKey("AIzaSyAKU87Du9iSuECGdoERw6lJbikZvmRdLmg");
 
@@ -23,6 +23,7 @@ export default class GeocodeService {
     static cityAddress = {};
     static countryAddress = {};
     static countryCode = {};
+    static allCountryNames = [];
 
     static async getLatLngFromCity(city_name, country_name) {
         if(this.cityAddress[city_name] != null)
@@ -60,5 +61,14 @@ export default class GeocodeService {
             .catch(err => console.log(err))
         this.countryAddress[country_name] = address;
         return address;
+    }
+
+    static async getAllCountryNames() {
+        if(this.allCountryNames.length !== 0)
+            return this.allCountryNames;
+
+        const names = getNames();
+        this.allCountryNames = names;
+        return names;
     }
 }

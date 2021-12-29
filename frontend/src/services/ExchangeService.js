@@ -31,7 +31,24 @@ export default class ExchangeService {
 
     }
 
-    
+    static async getExchangesWithCountriesAndType(countries, flowType){
+        const requestOptions = {
+            method: 'GET', 
+            headers: { 'Content-Type': 'application/json' },
+            mode: 'cors'
+        };
+        let data = await fetch(url + "exchange/all", requestOptions)
+            .then(res => res.json())
+            .catch(err => err)
+
+        if(countries == null || countries.length === 0 || flowType == null)
+            return data;
+
+        return data.filter(element => (flowType === "in" && countries.includes(element.country_destination)) ||
+                                        (flowType === "out" && countries.includes(element.country_origin)) ||
+                                        (flowType === "inout" && (countries.includes(element.country_destination) ||
+                                            countries.includes(element.country_origin))));
+    }
 
     static insertNewExchange(){
 
