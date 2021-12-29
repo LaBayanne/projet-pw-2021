@@ -1,19 +1,37 @@
+import Date from '../models/Date';
+
 const url = "http://localhost:3001/";
 
 export default class ExchangeService {
 
-    static getAllExchanges(callback){
+    static async getAllExchanges(){
         const requestOptions = {
             method: 'GET', 
             headers: { 'Content-Type': 'application/json' },
             mode: 'cors'
         };
-        fetch(url + "exchange/all", requestOptions)
+        return await fetch(url + "exchange/all", requestOptions)
             .then(res => res.json())
-            .then(res => callback(res))
             .catch(err => err)
 
     }
+
+    static async getExchangesBetweenDates(startDateObj, endDateObj){
+        const requestOptions = {
+            method: 'GET', 
+            headers: { 'Content-Type': 'application/json' },
+            mode: 'cors'
+        };
+        let data = await fetch(url + "exchange/all", requestOptions)
+            .then(res => res.json())
+            .catch(err => err)
+
+        return data.filter(element => (new Date(element.starting_date)).compareTo(startDateObj) >= 0 &&
+            (new Date(element.ending_date)).compareTo(endDateObj) <= 0);
+
+    }
+
+    
 
     static insertNewExchange(){
 

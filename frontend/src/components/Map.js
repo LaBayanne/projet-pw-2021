@@ -88,14 +88,11 @@ function Map(props) {
 
 
     async function showCityFlow(isArrowsCityEmpty){
-        console.log(props.exchanges.length);
         arrowsCountryFlow.forEach(arrow => arrow.setVisible(false));
         if(isArrowsCityEmpty === false){
             arrowsCityFlow.forEach(arrow => arrow.setVisible(true));
-            console.log("cities are present")
             return;
         }
-        console.log("cities not rpesent")
         let fromToDict = {};
         const setAtNullCityDestination = (element) => {
             fromToDict[element.country_origin][element.city_origin][element.country_destination][element.city_destination] = 1;
@@ -145,14 +142,11 @@ function Map(props) {
     }
 
     async function showCountryFlow(isArrowsCountryEmpty){
-        console.log(props.exchanges.length);
         arrowsCityFlow.forEach(arrow => arrow.setVisible(false));
         if(isArrowsCountryEmpty === false){
             arrowsCountryFlow.forEach(arrow => arrow.setVisible(true));
-            console.log("countries are present")
             return;
         }
-        console.log("ccOUNTRIES NOT PRESENT");
         let fromToDict = {};
         const setAtNullCountryDestination = (element) => {
             fromToDict[element.country_origin][element.country_destination] = 1;
@@ -195,15 +189,12 @@ function Map(props) {
     }
 
     useEffect(() => {
-        console.log("ZOOM");
         (async () => {
             showFlow(arrowsCityFlow.length === 0, arrowsCountryFlow.length === 0);
         })();
     }, [zoomLevel])
 
     useEffect(() => {
-        console.log("EXCHANGE MODIF");
-        
         (async () => {
             arrowsCityFlow.forEach(element => element.setMap(null));
             setArrowsCityFlow([]);

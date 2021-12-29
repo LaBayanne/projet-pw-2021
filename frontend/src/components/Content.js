@@ -8,24 +8,28 @@ import Date from '../models/Date';
 
 
 function Content(props) {
-
   const [exchanges, setExchanges] = useState([]);
-  const [currentExchanges, setCurrentExchanges] = useState([]);
-
-  const onExchangesGot = (data) => {
-    setExchanges(data);
-    setCurrentExchanges(data);
-  }
 
   const setRange = (startDate, endDate) => {
     const startDateObj = new Date(startDate);
     const endDateObj = new Date(endDate);
-    setCurrentExchanges(exchanges.filter(element => (new Date(element.starting_date)).compareTo(startDateObj) >= 0 &&
-                            (new Date(element.ending_date)).compareTo(endDateObj) <= 0));
+    getExchangesBetweenDates(startDateObj, endDateObj);
   }
 
+  async function getExchangesBetweenDates(startDateObj, endDateObj) {
+      const data = await ExchangeService.getExchangesBetweenDates(startDateObj, endDateObj);
+      setExchanges(data);
+  }
+
+  async function getAllExchanges() {
+    const data = await ExchangeService.getAllExchanges();
+    setExchanges(data);
+}
+
   useEffect(() => {
-      ExchangeService.getAllExchanges(onExchangesGot);
+    (async () => {
+      getAllExchanges();
+    })();
   }, [])
 
     return (
@@ -41,8 +45,8 @@ function Content(props) {
         <div>
           <div id="groupBox">
             <div id="groupBox2">
-              <Info id="Info" setRange={setRange}/>
-              <Map id="Map" exchanges={currentExchanges}/>
+              <Info id="Info" setRange={setRange} exchanges={exchanges}/>
+              <Map id="Map" exchanges={exchanges}/>
             </div>
           </div>
         </div>

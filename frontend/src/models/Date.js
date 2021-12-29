@@ -1,5 +1,14 @@
 export default class Date {
 
+    static timeInDayBetween = (date_1, date_2) => {
+        const startDate = date_1.compareTo(date_2) === -1 ? date_1 : date_2;
+        const endDate = date_1.compareTo(date_2) === -1 ? date_2 : date_1;
+        let res = (endDate.year - startDate.year) * 365;   
+        res += (endDate.month - startDate.month) * 30; 
+        res += (endDate.day - startDate.day);
+        return res;
+    }
+
     constructor(date){
         this.date = date;
         const dateArray = date.split('-');
@@ -24,6 +33,8 @@ export default class Date {
 
         return 0
     }
+
+    
 
     toString = () => {
         return this.date;
