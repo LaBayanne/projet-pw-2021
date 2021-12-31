@@ -1,7 +1,7 @@
 import React, {useState, useEffect } from 'react';
 import './Info.css';
 
-import { LineChart, Line, CartesianGrid, XAxis, YAxis, Label } from 'recharts';
+import { BarChart, Bar, LineChart, Line, CartesianGrid, XAxis, YAxis, Label } from 'recharts';
 import Select from "react-select";
 
 import Calendar from './Calendar';
@@ -44,6 +44,13 @@ function Info(props) {
 
   const [countriesSelected, setCountriesSelected] = useState();
 
+  const [median, setMedian] = useState();
+
+  const [k, setK] = useState();
+
+  const [topKCities, setTopKCities] = useState();
+  const [topKCountries, setTopKCountries] = useState();
+
   const getFlowType = () => {
     return checkedOne && checkedTwo ? "inout" : checkedOne ? "in" : checkedTwo ? "out" : "inout";
   }
@@ -75,6 +82,21 @@ function Info(props) {
     props.setCountries(countries, flowType);
   }
 
+  const topKToDescendingOrder = (array) => {
+    array = Object.entries(array);
+    for(let i = 1; i < array.length; i++){
+      for(let j = i; j > 0; j--){
+        if(array[j - 1][1] >= array[j][1])
+          break;
+        let temp = array[j - 1][1];
+        array[j - 1][1] = array[j][1];
+        array[j][1] = temp;
+      }
+    }
+
+    return array;
+  }
+
   useEffect(() =>{
     (async () => {
       let options = [];
@@ -91,36 +113,103 @@ function Info(props) {
 
   useEffect(() => {
     (async () => {
+
       let size = 0;
       let minDurations = [];
       let durations = {};
       let count = 0;
+      let medianCount = 0;
+      let topKCitiesComputing = {};
+      let topKCountriesComputing = {};
 
       let data = [];
       for(let i = 10; i <= 1000000; i*=10){
         data.push({name: i+'-'+i*10, count: 0});
       }
 
+      let flowType = getFlowType();
+      
       props.exchanges.forEach(element => {
           const startDate = new Date(element.starting_date);
           const endDate = new Date(element.ending_date);
           const duration = Date.timeInDayBetween(startDate, endDate);
           for(let i = 0; i <= duration && i < size; i++){
             minDurations[i]++;
+            medianCount++;
           }
           for(let i = size; i <= duration; i++){
             minDurations.push(1);
             size++;
+            medianCount++;
           }
           if(durations[duration] == null)
             durations[duration] = 1;
           else
             durations[duration]++;
+
+          let city = [];
+          let country = [];
+
+          switch(flowType){
+            case "in":
+              city.push(element.city_destination);
+              if(countriesSelected == null || countriesSelected.includes(element.country_destination))
+                country.push(element.country_destination);
+              break;
+            case "out":
+              city.push(element.city_origin);
+              if(countriesSelected == null || countriesSelected.includes(element.country_origin))
+                country.push(element.country_origin);
+              break;
+            default:
+              city.push(element.city_origin);
+              if(countriesSelected == null || countriesSelected.includes(element.country_origin))
+                country.push(element.country_origin);
+              city.push(element.city_destination);
+              if(countriesSelected == null || countriesSelected.includes(element.country_destination))
+                country.push(element.country_destination);
+          }
+          city.forEach(element => {
+            if(topKCitiesComputing[element] == null)
+              topKCitiesComputing[element] = 1;
+            else
+              topKCitiesComputing[element]++;
+          });
+          country.forEach(element => {
+            if(topKCountriesComputing[element] == null)
+              topKCountriesComputing[element] = 1;
+            else
+              topKCountriesComputing[element]++;
+          });
           
           data[Math.round(Math.log10(duration)) - 1].count++;
 
           count++;
       });
+
+      setMedian("Pas de séjour");
+      let currentMedianCount = 0;
+      for(let i = 0; i < minDurations.length; i++){
+        currentMedianCount += minDurations[i];
+        if(currentMedianCount >= medianCount / 2){
+          let years = Math.round(i / 365);
+          let rest = i % 365;
+          let months = Math.round(rest / 30);
+          let days = rest % 30;
+          setMedian(years + " ans " + months + " mois " + days + " jours");
+          break;
+        }
+      }
+
+      topKCitiesComputing = topKToDescendingOrder(topKCitiesComputing);
+      topKCountriesComputing = topKToDescendingOrder(topKCountriesComputing);
+
+      let topK = [];
+      topKCitiesComputing.forEach(element => topK.push({name: element[0], count: element[1]}))
+      setTopKCities(topK);
+      topK = [];
+      topKCountriesComputing.forEach(element => topK.push({name: element[0], count: element[1]}))
+      setTopKCountries(topK);
 
       setMinVisitDurationCount(minDurations);
       setVisitDurationCount(data);
@@ -157,8 +246,8 @@ function Info(props) {
         /><br/><br/>
       </div>
       <div id = "Out">
-        <p>Durée médiane des séjours sur cette période : </p>
-        {/*fonction qui retourne médiane sur la période choisie par le calendrier et qui affiche le nombre */}
+        <h6>Durée médiane des séjours sur cette période : </h6>
+        <h5>{median}</h5>
         <br/><br/>
         <p>Nombre de séjours de plus de </p> 
         
@@ -183,8 +272,29 @@ function Info(props) {
           <YAxis stroke="#222222">
             <Label value="Nombre d'échanges" angle={270} position='insideLeft' style={{ textAnchor: 'middle' }}/>
           </YAxis>
-          
         </LineChart>
+
+        <BarChart width={600} height={300} data={topKCities} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+          <Bar dataKey="count" fill="blue" barSize={30} />
+          <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+          <XAxis dataKey="name" stroke="#222222" >
+            <Label value="Villes" position="insideBottom" />
+          </XAxis>
+          <YAxis stroke="#222222">
+            <Label value="Nombre d'échanges" angle={270} position='insideLeft' style={{ textAnchor: 'middle' }}/>
+          </YAxis>
+        </BarChart>
+
+        <BarChart width={600} height={300} data={topKCountries} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+          <Bar dataKey="count" fill="blue" barSize={30} />
+          <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+          <XAxis dataKey="name" stroke="#222222" >
+            <Label value="Pays" position="insideBottom" />
+          </XAxis>
+          <YAxis stroke="#222222">
+            <Label value="Nombre d'échanges" angle={270} position='insideLeft' style={{ textAnchor: 'middle' }}/>
+          </YAxis>
+        </BarChart>
       </div>
     </div>
     

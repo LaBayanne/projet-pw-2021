@@ -32,10 +32,10 @@ function Content(props) {
     data = data.filter(element => (new Date(element.starting_date)).compareTo(startDateSelected) >= 0 &&
             (new Date(element.ending_date)).compareTo(endDateSelected) <= 0);
     }
-    if(countries != null && countries.length !== 0 && flowType != null){
+    if(countriesSelected != null && countriesSelected.length !== 0){
       data = data.filter(element => (flowTypeSelected === "in" && countriesSelected.includes(element.country_destination)) ||
                         (flowTypeSelected === "out" && countriesSelected.includes(element.country_origin)) ||
-                        (flowTypeSelected === "inout" && (countriesSelected.includes(element.country_destination) ||
+                        (flowTypeSelected !== "in" && flowTypeSelected !== "out" && (countriesSelected.includes(element.country_destination) ||
                          countriesSelected.includes(element.country_origin))));
     }
     setExchanges(data);
