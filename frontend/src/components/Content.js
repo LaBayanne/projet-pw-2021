@@ -65,7 +65,7 @@ function Content(props) {
         <div>
           <div id="groupBox">
             <div id="groupBox2">
-              <Info id="Info" setCountries={setCountriesFun} setRange={setRange} exchanges={exchanges}/>
+              <Info id="Info" logged={props.logged} setCountries={setCountriesFun} setRange={setRange} exchanges={exchanges}/>
               <Map id="Map" exchanges={exchanges}/>
             </div>
           </div>

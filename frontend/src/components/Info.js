@@ -46,7 +46,7 @@ function Info(props) {
 
   const [median, setMedian] = useState();
 
-  const [k, setK] = useState();
+  const [k, setK] = useState(5);
 
   const [topKCities, setTopKCities] = useState();
   const [topKCountries, setTopKCountries] = useState();
@@ -206,10 +206,10 @@ function Info(props) {
 
       let topK = [];
       topKCitiesComputing.forEach(element => topK.push({name: element[0], count: element[1]}))
-      setTopKCities(topK);
+      setTopKCities(topK.slice(0, k));
       topK = [];
       topKCountriesComputing.forEach(element => topK.push({name: element[0], count: element[1]}))
-      setTopKCountries(topK);
+      setTopKCountries(topK.slice(0, k));
 
       setMinVisitDurationCount(minDurations);
       setVisitDurationCount(data);
@@ -245,6 +245,7 @@ function Info(props) {
             closeMenuOnSelect={false}
         /><br/><br/>
       </div>
+      {props.logged ? 
       <div id = "Out">
         <h6>Durée médiane des séjours sur cette période : </h6>
         <h5>{median}</h5>
@@ -296,6 +297,8 @@ function Info(props) {
           </YAxis>
         </BarChart>
       </div>
+      :
+      null}
     </div>
     
   );

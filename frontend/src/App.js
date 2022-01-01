@@ -19,7 +19,7 @@ function App() {
     >
     <div className="App">
         <Banner logged={logged} setLogged={setLogged} username={username} setUsername={setUsername}/>
-        <Content/>
+        <Content logged={logged}/>
     </div>
 
     </div>
