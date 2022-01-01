@@ -3,7 +3,7 @@ import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 import './Map.css';
 import GeocodeService from '../services/GeocodeService';
 
-const countryFLowMinZoom = 4;
+const countryFlowMinZoom = 4;
 const meanCountAtCityLevel = 10;
 const meanCountAtCountryLevel = 100;
 const meanStrokeWeight = 5;
@@ -23,7 +23,7 @@ const options = {
     fullscreenControl: false,
     streetViewControl: false,
     mapTypeControl: false,
-    defaultZoom: 3,
+    defaultZoom: 6,
     minZoom: 3,
     maxZoom: 6, 
 };
@@ -39,7 +39,8 @@ function Map(props) {
 
     const [map, setMap] = React.useState(null)
     const [zoomLevel, setZoomLevel] = React.useState(options.defaultZoom);
-    const [arrows, setArrows] = React.useState([]);
+    const [arrowsCountryFlow, setArrowsCountryFlow] = React.useState([]);
+    const [arrowsCityFlow, setArrowsCityFlow] = React.useState([]);
 
     const onLoad = React.useCallback(function callback(map) {
         const bounds = new window.google.maps.LatLngBounds(parisLatLng);
@@ -59,7 +60,7 @@ function Map(props) {
             path: window.google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
         };
         // Create the polyline and add the symbol via the 'icons' property.
-        const line = new window.google.maps.Polyline({
+        return new window.google.maps.Polyline({
             path: [
                 {lat: latFrom, lng: lngFrom},
                 {lat: latTo, lng: lngTo},
@@ -73,10 +74,25 @@ function Map(props) {
             map: map,
             strokeWeight: strokeWeight
         });
-        setArrows(arrows => [...arrows, line]);
     }
 
-    async function showCityFlow(){
+    const drawArrowBetweenCities = (latFrom, lngFrom, latTo, lngTo, strokeWeight) => {
+        const arrow = drawArrowBetweenLocations(latFrom, lngFrom, latTo, lngTo, strokeWeight);
+        setArrowsCityFlow(arrowsCityFlow => [...arrowsCityFlow, arrow]);
+    }
+
+    const drawArrowBetweenCountries = (latFrom, lngFrom, latTo, lngTo, strokeWeight) => {
+        const arrow = drawArrowBetweenLocations(latFrom, lngFrom, latTo, lngTo, strokeWeight);
+        setArrowsCountryFlow(arrowsCountryFlow => [...arrowsCountryFlow, arrow]);
+    }
+
+
+    async function showCityFlow(isArrowsCityEmpty){
+        arrowsCountryFlow.forEach(arrow => arrow.setVisible(false));
+        if(isArrowsCityEmpty === false){
+            arrowsCityFlow.forEach(arrow => arrow.setVisible(true));
+            return;
+        }
         let fromToDict = {};
         const setAtNullCityDestination = (element) => {
             fromToDict[element.country_origin][element.city_origin][element.country_destination][element.city_destination] = 1;
@@ -118,14 +134,19 @@ function Map(props) {
                         const to = await GeocodeService.getLatLngFromCity(cityDestination, countryDestination);
                         const strokeWeight = count / meanCountAtCityLevel * meanStrokeWeight;
                         //console.log(countryOrigin, cityOrigin, countryDestination, cityDestination, count, strokeWeight);
-                        drawArrowBetweenLocations(from.lat, from.lng, to.lat, to.lng, strokeWeight);
+                        drawArrowBetweenCities(from.lat, from.lng, to.lat, to.lng, strokeWeight);
                     }
                 }
             }
         }
     }
 
-    async function showCountryFlow(){
+    async function showCountryFlow(isArrowsCountryEmpty){
+        arrowsCityFlow.forEach(arrow => arrow.setVisible(false));
+        if(isArrowsCountryEmpty === false){
+            arrowsCountryFlow.forEach(arrow => arrow.setVisible(true));
+            return;
+        }
         let fromToDict = {};
         const setAtNullCountryDestination = (element) => {
             fromToDict[element.country_origin][element.country_destination] = 1;
@@ -151,25 +172,38 @@ function Map(props) {
                 const to = await GeocodeService.getLatLngFromCountry(countryDestination);
                 const strokeWeight = count / meanCountAtCountryLevel * meanStrokeWeight;
                 //console.log(countryOrigin, cityOrigin, countryDestination, cityDestination, count, strokeWeight);
-                drawArrowBetweenLocations(from.lat, from.lng, to.lat, to.lng, strokeWeight);
+                drawArrowBetweenCountries(from.lat, from.lng, to.lat, to.lng, strokeWeight);
+            }
+        }
+    }
+
+    async function showFlow(isArrowsCityEmpty, isArrowsCountryEmpty) {
+        if(map != null){
+            if(zoomLevel <= countryFlowMinZoom) {
+                showCountryFlow(isArrowsCountryEmpty);
+            }
+            else {
+                showCityFlow(isArrowsCityEmpty);
             }
         }
     }
 
     useEffect(() => {
         (async () => {
-            if(map != null){
-                if(zoomLevel <= countryFLowMinZoom) {
-                    arrows.forEach(element => element.setMap(null));
-                    setArrows([]);
-                    showCountryFlow();
-                }
-                else {
-                    showCityFlow();
-                }
-            }
+            showFlow(arrowsCityFlow.length === 0, arrowsCountryFlow.length === 0);
         })();
-    }, [props.exchanges, zoomLevel])
+    }, [zoomLevel])
+
+    useEffect(() => {
+        (async () => {
+            arrowsCityFlow.forEach(element => element.setMap(null));
+            setArrowsCityFlow([]);
+            arrowsCountryFlow.forEach(element => element.setMap(null));
+            setArrowsCountryFlow([]);
+            showFlow(true, true);
+        })();
+    }, [props.exchanges])
+    
 
     return isLoaded ? 
         (<div className ="map">

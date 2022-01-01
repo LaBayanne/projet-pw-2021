@@ -8,7 +8,6 @@ export function Login({status,setStatus,logged,setLogged,username,setUsername}) 
     const [mdp, setMdp] = useState("");
 
     function isAccountRegistered(res){
-      console.log(res);
       if(res){
         setLogged(true);
         setUsername(login);

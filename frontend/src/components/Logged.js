@@ -7,7 +7,7 @@ function Logged({status,setStatus,logged,setLogged,username,setUsername}) {
   const handleSubmit = (evt) => {
     evt.preventDefault();
 
-    console.log("Event triggered");
+    //console.log("Event triggered");
 
     setLogged(false);
     setStatus(Status.SignIn);
