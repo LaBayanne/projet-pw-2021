@@ -16,9 +16,11 @@ export function SignUp({status,setStatus,logged,setLogged}) {
     }
 
     const handleSubmit = (evt) => {
-        evt.preventDefault();
+      evt.preventDefault();
 
-        AccountService.createAccount(clear,login,mdp);
+      const data = {"name":login,"password":mdp};
+
+      AccountService.createAccount(clear,JSON.stringify(data));
     }
 
     const redirectToSignIn = (evt) => {

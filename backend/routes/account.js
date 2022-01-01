@@ -2,63 +2,65 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../config/db');
 const cors = require('cors');
+const bcrypt = require('bcrypt');
+const axios = require('axios');
 
 pool.connect();
 
 router.use(cors());
 
-router.get('/isAccount', async (req,res) => {
+router.post('/isAccount/', async (req,res) => {
     try {
+        const name = req.body.name;
+        const passwd = req.body.password;
+
         const response = await pool.query("SELECT * from account;");
-        res.send(response.rows);
+        const rows = response.rows;
+        for(let key in rows){
+            if(rows.hasOwnProperty(key) && rows[key]["name"] === name){
+                bcrypt.compare(passwd, rows[key]["password"])
+                .then(resultCompare => res.send(resultCompare))
+                .catch(err => err)
+            }
+        }
+        res.send(false);
     } catch (error) {
         console.error(error);
     }
 });
 
-router.post('/createAccount/:name/:password', async (req, res) => {
+router.post('/createAccount', async (req, res) => {
     try {
-        await pool.query("INSERT INTO account (name,password) VALUES ($1,$2);",[req.params.name, req.params.password]);
+        const name = req.body.name;
+        const passwd = req.body.password;
+
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(passwd, salt);
+        await pool.query("INSERT INTO account (name,password) VALUES ($1,$2);",[name, hashedPassword]);
         res.end();
     } catch (error) {
         console.error(error);
     }
 });
 
-/*router.post('/new/:id/:name/:password',async (req,res) => {
+router.post('/populate', async (req,res) => {
+
+    /*apps = ['SonsOfAnarchy', 'Illuminati', 'RocketTeam'];
+    
+
     try {
-        await pool.query("INSERT INTO account(id,name,password) VALUES ($1,$2,$3);",[req.params.id,req.params.name,req.params.password]);
+        const origin = await axios.get("https://random-data-api.com/api/users/random_user");
+        const destination = await axios.get("https://random-data-api.com/api/users/random_user");
+        const app = Math.floor(Math.random() * 3);
+        const bdate= Math.floor(Math.random() * 31).toString() + "-" + Math.floor(Math.random() * 13).toString() + "-201" + Math.floor(Math.random() * 10).toString(); 
+        const edate= Math.floor(Math.random() * 31).toString() + "-" + Math.floor(Math.random() * 13).toString() + "-202" + Math.floor(Math.random() * 10).toString();
+
+        await pool.query("INSERT INTO exchange (person_name,starting_date,ending_date,attached_team,country_destination,country_origin,city_destination,city_origin) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)", [origin["data"]["last_name"],bdate,edate,app,destination["data"]["address"]["country"],origin["data"]["address"]["country"],destination["data"]["address"]["city"],origin["data"]["address"]["city"]]);
+        console.log("Entered");
         res.end();
-    } catch (error) {
-        console.error(error);
-    }
+    } catch(err) {
+        console.log("error: ", err);
+    }*/
 });
-
-router.get('/get_by_name/:name', async (req,res) => {
-    try {
-        const response = await pool.query("SELECT * FROM account WHERE name = ($1);",[req.params.name]);
-        res.send( response.rows);
-    } catch (error) {
-        console.error(error);
-    }
-});
-
-router.get('/get_by_id/:id', async (req,res) => {
-    try {
-        const response = await pool.query("SELECT * FROM account WHERE id = ($1);",[req.params.id])
-        res.send(response.rows);
-    } catch (error) {
-        console.error(error);
-    }
-});
-
-router.delete('/delete/:id', async (req,res) => {
-    try {
-        await pool.query("DELETE FROM account WHERE id = ($1);",[req.params.id]);
-        res.end();
-    } catch (error) {
-        console.error(error);
-    }
-})*/
 
 module.exports = router;

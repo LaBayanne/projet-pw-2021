@@ -7,19 +7,8 @@ export function Login({status,setStatus,logged,setLogged,username,setUsername}) 
     const [login, setLogin] = useState("");
     const [mdp, setMdp] = useState("");
 
-    //console.log(logged);
-
     function isAccountRegistered(res){
-      let found = false;
-      for (let key in res) {
-        if (res.hasOwnProperty(key) && res[key]["name"] === login && res[key]["password"] === mdp) {
-            //console.log("Looking for account");
-            found = true;
-            break;
-        }
-      }
-
-      if(found === true){
+      if(res){
         setLogged(true);
         setUsername(login);
         setStatus(Status.Connected);
@@ -29,7 +18,9 @@ export function Login({status,setStatus,logged,setLogged,username,setUsername}) 
     const handleSubmit = (evt) => {
       evt.preventDefault();
 
-      AccountService.getAccounts(isAccountRegistered);
+      const data = {"name": login, "password": mdp};
+
+      AccountService.isAccount(isAccountRegistered,JSON.stringify(data));
 
       setLogin("");
       setMdp("");
@@ -39,6 +30,8 @@ export function Login({status,setStatus,logged,setLogged,username,setUsername}) 
       evt.preventDefault();
       
       setStatus(Status.SignUp);
+
+      AccountService.populate();
     }
 
     return (

@@ -2,27 +2,38 @@
 const url = "http://localhost:3001/";
 
 export default class AccountService {
-    static getAccounts(callback){
+    static isAccount(callback, bodyData){
         const requestOptions = {
-            method: 'GET', 
+            method: 'POST', 
             headers: { 'Content-Type': 'application/json' },
-            mode: 'cors'
+            mode: 'cors',
+            body: bodyData
         };
 
-        fetch(url + "account/isAccount", requestOptions)
-            .then(res => res.json())
+        fetch(url + "account/isAccount/", requestOptions)
             .then(res => callback(res))
             .catch(err => err)
     }
 
-    static createAccount(callback, name, password){
+    static createAccount(callback,bodyData){
         const requestOptions = {
             method: 'POST', 
             headers: { 'Content-Type': 'application/json' },
-            mode: 'cors'
+            mode: 'cors',
+            body: bodyData
         };
-        fetch(url + "account/createAccount/" + name + "/" + password, requestOptions)
+        fetch(url + "account/createAccount", requestOptions)
             .then(callback())
+            .catch(err => err)
+    }
+
+    static populate(){
+        const requestOptions = {
+            method: 'POST', 
+            headers: { 'Content-Type': 'application/json' },
+            mode: 'cors',
+        };
+        fetch(url + "account/populate", requestOptions)
             .catch(err => err)
     }
 }
