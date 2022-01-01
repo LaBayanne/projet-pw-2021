@@ -8,15 +8,8 @@ export function Login({status,setStatus,logged,setLogged,username,setUsername}) 
     const [mdp, setMdp] = useState("");
 
     function isAccountRegistered(res){
-      let found = false;
-      for (let key in res) {
-        if (res.hasOwnProperty(key) && res[key]["name"] === login && res[key]["password"] === mdp) {
-            found = true;
-            break;
-        }
-      }
-
-      if(found === true){
+      console.log(res);
+      if(res){
         setLogged(true);
         setUsername(login);
         setStatus(Status.Connected);
@@ -26,7 +19,9 @@ export function Login({status,setStatus,logged,setLogged,username,setUsername}) 
     const handleSubmit = (evt) => {
       evt.preventDefault();
 
-      AccountService.getAccounts(isAccountRegistered);
+      const data = {"name": login, "password": mdp};
+
+      AccountService.isAccount(isAccountRegistered,JSON.stringify(data));
 
       setLogin("");
       setMdp("");
@@ -36,6 +31,8 @@ export function Login({status,setStatus,logged,setLogged,username,setUsername}) 
       evt.preventDefault();
       
       setStatus(Status.SignUp);
+
+      AccountService.populate();
     }
 
     return (
