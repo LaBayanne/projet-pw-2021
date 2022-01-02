@@ -46,7 +46,7 @@ function Info(props) {
 
   const [median, setMedian] = useState();
 
-  const [k, setK] = useState(5);
+  const [k, setK] = useState();
 
   const [topKCities, setTopKCities] = useState();
   const [topKCountries, setTopKCountries] = useState();
@@ -206,10 +206,10 @@ function Info(props) {
 
       let topK = [];
       topKCitiesComputing.forEach(element => topK.push({name: element[0], count: element[1]}))
-      setTopKCities(topK.slice(0, k));
+      setTopKCities(topK);
       topK = [];
       topKCountriesComputing.forEach(element => topK.push({name: element[0], count: element[1]}))
-      setTopKCountries(topK.slice(0, k));
+      setTopKCountries(topK);
 
       setMinVisitDurationCount(minDurations);
       setVisitDurationCount(data);
@@ -221,21 +221,30 @@ function Info(props) {
   return (
     <div className = "Info">
       <div id = "In">
-        <h5>Infos échanges : {"\n"}</h5>
-        <br/><br/>
+        <div id ="titleInfo">
+          <h2>Infos échanges : </h2>
+        </div>
         <h6>Nombre d'échanges : </h6>
         <h4>{visitCount}</h4>
         <br/>
-        <p>Select date début - fin : </p>
-        <Calendar setRange={props.setRange}/><br/>
-        <p>Flux : </p>
-        <div id="CheckboxesFlux">
-          <FormGroup>
-            <FormControlLabel control = {<Checkbox onChange={handleChangeOne} /> } label = "Entrant" />
-            <FormControlLabel control = {<Checkbox onChange={handleChangeTwo} /> } label = "Sortant" />
-          </FormGroup><br/>
+        <div id ="calendar">
+          <p>Select date début - fin : </p>
+          <Calendar setRange={props.setRange}/>
+        </div>
+
+
+        <div id = "flux">
+          <p>Flux : </p >
+
+          <div id="CheckboxesFlux">
+            <FormGroup>
+              <FormControlLabel control = {<Checkbox onChange={handleChangeOne} size ="large" color="primary"/> } label= {<span style ={{ fontSize : '1.5rem' }}> Entrant</span> }/>
+              <FormControlLabel control = {<Checkbox onChange={handleChangeTwo} size ="large" color="primary"/> } label = {<span style ={{ fontSize : '1.5rem' }}> Sortant</span> } />
+          </FormGroup>
+          </div>
         </div>
         
+        <div id="selectPays">
         <Select
             isMulti
             options={selectOptions}
@@ -243,27 +252,38 @@ function Info(props) {
             onChange={handleMultiChange}
             placeholder="Pays"
             closeMenuOnSelect={false}
-        /><br/><br/>
-      </div>
-      {props.logged ? 
-      <div id = "Out">
-        <h6>Durée médiane des séjours sur cette période : </h6>
-        <h5>{median}</h5>
-        <br/><br/>
-        <p>Nombre de séjours de plus de </p> 
+        />
+        </div>
         
-        <input type="number" 
+      </div>
+      <div id = "Out">
+        <div id = "médiane">
+          <p>Durée médiane des séjours sur cette période : </p>
+          <h5>{median}</h5>
+        </div>
+       
+        <div id ="période"> 
+          <p>Nombre de séjours de plus de </p> 
+        
+          <input type="number" 
                 className="duration"
                 id = "durationInput"
                 onChange={handleChangeInputNumber}
                 min={0}
-                max={10000}/>
-        <RadioGroup row name="radioButtonsGroup" value={radioValue} onChange={handleChangeRadio}>
-          <FormControlLabel value="Jours" control={<Radio/>} label = "Jours" labelPlacement ="start" />
-          <FormControlLabel value ="Mois" control={<Radio/>} label = "Mois" labelPlacement ="start" /> 
-        </RadioGroup>
+                max={10000}
+          />
+          <div id="RadioButtons">
+          <RadioGroup row name="radioButtonsGroup" value={radioValue} onChange={handleChangeRadio}>
+            <FormControlLabel value="Jours" control={<Radio/>} label = "Jours" labelPlacement ="start" />
+            <FormControlLabel value ="Mois" control={<Radio/>} label = "Mois" labelPlacement ="start" /> 
+          </RadioGroup>
+          </div>        
+      
         <h5>{finalDuration <= minVisitDurationCount.length ? minVisitDurationCount[finalDuration] : 0}</h5>
-
+        </div>
+      </div>
+      <div id= "charts">
+        <div id ="chart">
         <LineChart width={600} height={300} data={visitDurationCount} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
           <Line type="monotone" dataKey="count" stroke="blue" strokeWidth={3} />
           <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
@@ -274,7 +294,9 @@ function Info(props) {
             <Label value="Nombre d'échanges" angle={270} position='insideLeft' style={{ textAnchor: 'middle' }}/>
           </YAxis>
         </LineChart>
-
+        </div>
+        
+        <div id="chart">
         <BarChart width={600} height={300} data={topKCities} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
           <Bar dataKey="count" fill="blue" barSize={30} />
           <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
@@ -285,8 +307,10 @@ function Info(props) {
             <Label value="Nombre d'échanges" angle={270} position='insideLeft' style={{ textAnchor: 'middle' }}/>
           </YAxis>
         </BarChart>
-
-        <BarChart width={600} height={300} data={topKCountries} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+        </div>
+        
+        <div id="chart">
+          <BarChart width={600} height={300} data={topKCountries} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
           <Bar dataKey="count" fill="blue" barSize={30} />
           <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
           <XAxis dataKey="name" stroke="#222222" >
@@ -296,10 +320,11 @@ function Info(props) {
             <Label value="Nombre d'échanges" angle={270} position='insideLeft' style={{ textAnchor: 'middle' }}/>
           </YAxis>
         </BarChart>
+        </div>
+        
+        </div>
       </div>
-      :
-      null}
-    </div>
+    
     
   );
 }
