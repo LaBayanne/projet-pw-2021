@@ -201,21 +201,30 @@ function Info(props) {
   return (
     <div className = "Info">
       <div id = "In">
-        <h5>Infos échanges : {"\n"}</h5>
-        <br/><br/>
+        <div id ="titleInfo">
+          <h2>Infos échanges : </h2>
+        </div>
         <h6>Nombre d'échanges : </h6>
         <h4>{visitCount}</h4>
         <br/>
-        <p>Select date début - fin : </p>
-        <Calendar setRange={props.setRange}/><br/>
-        <p>Flux : </p>
-        <div id="CheckboxesFlux">
-          <FormGroup>
-            <FormControlLabel control = {<Checkbox onChange={handleChangeOne} /> } label = "Entrant" />
-            <FormControlLabel control = {<Checkbox onChange={handleChangeTwo} /> } label = "Sortant" />
-          </FormGroup><br/>
+        <div id ="calendar">
+          <p>Select date début - fin : </p>
+          <Calendar setRange={props.setRange}/>
+        </div>
+
+
+        <div id = "flux">
+          <p>Flux : </p >
+
+          <div id="CheckboxesFlux">
+            <FormGroup>
+              <FormControlLabel control = {<Checkbox onChange={handleChangeOne} size ="large" color="primary"/> } label= {<span style ={{ fontSize : '1.5rem' }}> Entrant</span> }/>
+              <FormControlLabel control = {<Checkbox onChange={handleChangeTwo} size ="large" color="primary"/> } label = {<span style ={{ fontSize : '1.5rem' }}> Sortant</span> } />
+          </FormGroup>
+          </div>
         </div>
         
+        <div id="selectPays">
         <Select
             isMulti
             options={selectOptions}
@@ -223,33 +232,42 @@ function Info(props) {
             onChange={handleMultiChange}
             placeholder="Pays"
             closeMenuOnSelect={false}
-        /><br/><br/>
+        />
+        </div>
+        
       </div>
       {props.logged ? 
       <div id = "Out">
-        <h6>Durée médiane des séjours sur cette période : </h6>
-        <h5>{median}</h5>
-        <br/><br/>
-        <p>Nombre de séjours de plus de </p> 
+        <div id = "médiane">
+          <p>Durée médiane des séjours sur cette période : </p>
+          <h5>{median}</h5>
+        </div>
+       
+        <div id ="période"> 
+          <p>Nombre de séjours de plus de </p> 
         
-        <input type="number" 
+          <input type="number" 
                 className="duration"
                 id = "durationInput"
                 onChange={handleChangeInputNumber}
                 min={0}
-                max={10000}/>
-        <RadioGroup row name="radioButtonsGroup" value={radioValue} onChange={handleChangeRadio}>
-          <FormControlLabel value="Jours" control={<Radio/>} label = "Jours" labelPlacement ="start" />
-          <FormControlLabel value ="Mois" control={<Radio/>} label = "Mois" labelPlacement ="start" /> 
-        </RadioGroup>
+                max={10000}
+          />
+          <div id="RadioButtons">
+          <RadioGroup row name="radioButtonsGroup" value={radioValue} onChange={handleChangeRadio}>
+            <FormControlLabel value="Jours" control={<Radio/>} label = "Jours" labelPlacement ="start" />
+            <FormControlLabel value ="Mois" control={<Radio/>} label = "Mois" labelPlacement ="start" /> 
+          </RadioGroup>
+          </div>        
+      
         <h5>{finalDuration <= minVisitDurationCount.length ? minVisitDurationCount[finalDuration] : 0}</h5>
 
         <GraphList visitDurationCount={visitDurationCount} topKCities={topKCities} topKCountries={topKCountries}/>
       </div>
+    </div>
       :
       null}
     </div>
-    
   );
 }
 

@@ -53,14 +53,7 @@ function Content(props) {
   }, [])
 
     return (
-      <div
-        style={{
-          position: "absolute",
-          zIndex: 0,
-          width: "100%", // or you can use width: '100vw'
-          height: "100%" // or you can use height: '100vh'
-        }}
-        id="Content"
+      <div  id="Content"
       >
         <div>
           <div id="groupBox">
