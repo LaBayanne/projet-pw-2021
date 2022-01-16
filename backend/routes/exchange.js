@@ -7,7 +7,15 @@ pool.connect();
 
 router.use(cors());
 
-//Get all colonne from a kanban
+/**
+ * @openapi
+ * /all:
+ *   get:
+ *     description: Get all exchanges
+ *     responses:
+ *       '200':
+ *         description: Returns the whole set of exchanges
+ */
 router.get('/all', async (req,res) => {
     try {
         const response = await pool.query("SELECT * FROM exchange;");
