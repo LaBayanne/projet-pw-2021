@@ -1,6 +1,7 @@
 FROM node:12-alpine
-RUN apk add --no-cache postgresql postgresql-client npm
-WORKDIR .
+RUN apk add --no-cache npm
+WORKDIR frontend
 COPY . .
 RUN yarn install --production
-CMD ["node", "frontend/src/index.js"]
+RUN npm install
+CMD ["npm", "start"]
