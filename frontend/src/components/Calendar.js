@@ -19,7 +19,7 @@ function Calendar (props){
     return (
         <div className = "calendar"> 
           <DateRangePicker
-            style={{ width: 300 }}
+            style={{ width: 500 }}
             placeholder="Select Date Range"
             format= 'dd/MM/yyyy'
             onChange={onChange}

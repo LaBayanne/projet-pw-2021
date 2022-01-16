@@ -1,24 +1,21 @@
 #Content{
-    background-color: #6F7D8C;
+    background: linear-gradient(166deg, rgba(115,131,177,1) 0%, rgba(102,123,180,1) 27%, rgba(189,198,227,1) 53%, rgba(211,220,249,1) 80%);  
+    position:absolute;
+    width: 100%;
 }
 
 #groupBox{
-    background-color: #6F7D8C;
-    margin: 2%;
+    margin: 1%;
     border: solid 1px;
     border-color: black;
     border-radius: 5px;
-    height:900px;
 }
 
 #groupBox2{
     margin: 2%;
-    background-color: #6F7D8C;
     display: flex;
 }
 
-#Out,#In{
-    border: solid 1px;
-    border-color: black;
-    border-radius: 5px;
+#Content,#groupBox, #groupBox2{
+    min-block-size: fit-content;
 }

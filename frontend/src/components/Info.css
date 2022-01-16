@@ -1,3 +1,89 @@
 .Info{
+    color:white;
+    margin-top:1%;
+}
 
+.Info p{
+    text-align: left;
+    margin-left: 2%;
+    font-size: 25px;
+    font-weight: 50;
+}
+
+#Out,#In{
+    border: solid 1px;
+    border-color: black;
+    border-radius: 5px;
+    width:100%
+}
+
+#In{
+    
+    margin-bottom: 10%;
+    font-size: 1.5rem;
+    max-block-size: fit-content;
+}
+
+#Out{
+    margin-bottom: 10%;
+}
+#Out h5{
+    margin-bottom: 5%;
+}
+
+#titleInfo{
+    margin:5%;
+    text-align: center;
+    line-height: 42px;
+}
+
+.calendar{
+    margin:3%
+}
+
+#calendar{
+    margin-top: 10%;
+    margin-bottom: 15%;
+}
+
+#flux p {
+    margin-bottom: 3%;
+}
+
+#médiane {
+    margin-bottom: 15%;
+    margin-top: 3%;
+}
+
+#période p{
+    margin-bottom: 2%;
+}
+
+
+#charts{
+    border: solid 1px;
+    border-color: black;
+    border-radius: 5px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    max-width: 610px;
+    scroll-snap-type: x mandatory;
+}
+
+
+#chart {
+    width: 600px;
+    scroll-snap-align : start 
+}
+
+#selectPays{
+    margin-top: 15%;
+    margin-bottom: 10%;
+}
+
+#RadioButtons{
+    margin-left: 30%;
 }

@@ -1,7 +1,7 @@
 import React, {useState, useEffect } from 'react';
 import './Info.css';
 
-import { BarChart, Bar, LineChart, Line, CartesianGrid, XAxis, YAxis, Label } from 'recharts';
+
 import Select from "react-select";
 
 import Calendar from './Calendar';
@@ -12,7 +12,7 @@ import RadioGroup  from '@mui/material/RadioGroup';
 import { Radio } from '@mui/material';
 import Date from '../models/Date';
 import GeocodeService from '../services/GeocodeService';
-//import NumericImput from 'react-numeric-input'
+import GraphList from './GraphList';
 
 
 
@@ -46,10 +46,10 @@ function Info(props) {
 
   const [median, setMedian] = useState();
 
-  const [k, setK] = useState();
+  const [topKCities, setTopKCities] = useState({});
+  const [topKCountries, setTopKCountries] = useState({});
 
-  const [topKCities, setTopKCities] = useState();
-  const [topKCountries, setTopKCountries] = useState();
+
 
   const getFlowType = () => {
     return checkedOne && checkedTwo ? "inout" : checkedOne ? "in" : checkedTwo ? "out" : "inout";
@@ -80,21 +80,6 @@ function Info(props) {
     const flowType = getFlowType();
     setCountriesSelected(countries);
     props.setCountries(countries, flowType);
-  }
-
-  const topKToDescendingOrder = (array) => {
-    array = Object.entries(array);
-    for(let i = 1; i < array.length; i++){
-      for(let j = i; j > 0; j--){
-        if(array[j - 1][1] >= array[j][1])
-          break;
-        let temp = array[j - 1][1];
-        array[j - 1][1] = array[j][1];
-        array[j][1] = temp;
-      }
-    }
-
-    return array;
   }
 
   useEffect(() =>{
@@ -187,6 +172,9 @@ function Info(props) {
           count++;
       });
 
+      setTopKCities(topKCitiesComputing);
+      setTopKCountries(topKCountriesComputing);
+
       setMedian("Pas de séjour");
       let currentMedianCount = 0;
       for(let i = 0; i < minDurations.length; i++){
@@ -201,15 +189,7 @@ function Info(props) {
         }
       }
 
-      topKCitiesComputing = topKToDescendingOrder(topKCitiesComputing);
-      topKCountriesComputing = topKToDescendingOrder(topKCountriesComputing);
-
-      let topK = [];
-      topKCitiesComputing.forEach(element => topK.push({name: element[0], count: element[1]}))
-      setTopKCities(topK);
-      topK = [];
-      topKCountriesComputing.forEach(element => topK.push({name: element[0], count: element[1]}))
-      setTopKCountries(topK);
+      
 
       setMinVisitDurationCount(minDurations);
       setVisitDurationCount(data);
@@ -221,21 +201,30 @@ function Info(props) {
   return (
     <div className = "Info">
       <div id = "In">
-        <h5>Infos échanges : {"\n"}</h5>
-        <br/><br/>
+        <div id ="titleInfo">
+          <h2>Infos échanges : </h2>
+        </div>
         <h6>Nombre d'échanges : </h6>
         <h4>{visitCount}</h4>
         <br/>
-        <p>Select date début - fin : </p>
-        <Calendar setRange={props.setRange}/><br/>
-        <p>Flux : </p>
-        <div id="CheckboxesFlux">
-          <FormGroup>
-            <FormControlLabel control = {<Checkbox onChange={handleChangeOne} /> } label = "Entrant" />
-            <FormControlLabel control = {<Checkbox onChange={handleChangeTwo} /> } label = "Sortant" />
-          </FormGroup><br/>
+        <div id ="calendar">
+          <p>Select date début - fin : </p>
+          <Calendar setRange={props.setRange}/>
+        </div>
+
+
+        <div id = "flux">
+          <p>Flux : </p >
+
+          <div id="CheckboxesFlux">
+            <FormGroup>
+              <FormControlLabel control = {<Checkbox onChange={handleChangeOne} size ="large" color="primary"/> } label= {<span style ={{ fontSize : '1.5rem' }}> Entrant</span> }/>
+              <FormControlLabel control = {<Checkbox onChange={handleChangeTwo} size ="large" color="primary"/> } label = {<span style ={{ fontSize : '1.5rem' }}> Sortant</span> } />
+          </FormGroup>
+          </div>
         </div>
         
+        <div id="selectPays">
         <Select
             isMulti
             options={selectOptions}
@@ -243,61 +232,42 @@ function Info(props) {
             onChange={handleMultiChange}
             placeholder="Pays"
             closeMenuOnSelect={false}
-        /><br/><br/>
-      </div>
-      <div id = "Out">
-        <h6>Durée médiane des séjours sur cette période : </h6>
-        <h5>{median}</h5>
-        <br/><br/>
-        <p>Nombre de séjours de plus de </p> 
+        />
+        </div>
         
-        <input type="number" 
+      </div>
+      {props.logged ? 
+      <div id = "Out">
+        <div id = "médiane">
+          <p>Durée médiane des séjours sur cette période : </p>
+          <h5>{median}</h5>
+        </div>
+       
+        <div id ="période"> 
+          <p>Nombre de séjours de plus de </p> 
+        
+          <input type="number" 
                 className="duration"
                 id = "durationInput"
                 onChange={handleChangeInputNumber}
                 min={0}
-                max={10000}/>
-        <RadioGroup row name="radioButtonsGroup" value={radioValue} onChange={handleChangeRadio}>
-          <FormControlLabel value="Jours" control={<Radio/>} label = "Jours" labelPlacement ="start" />
-          <FormControlLabel value ="Mois" control={<Radio/>} label = "Mois" labelPlacement ="start" /> 
-        </RadioGroup>
+                max={10000}
+          />
+          <div id="RadioButtons">
+          <RadioGroup row name="radioButtonsGroup" value={radioValue} onChange={handleChangeRadio}>
+            <FormControlLabel value="Jours" control={<Radio/>} label = "Jours" labelPlacement ="start" />
+            <FormControlLabel value ="Mois" control={<Radio/>} label = "Mois" labelPlacement ="start" /> 
+          </RadioGroup>
+          </div>        
+      
         <h5>{finalDuration <= minVisitDurationCount.length ? minVisitDurationCount[finalDuration] : 0}</h5>
 
-        <LineChart width={600} height={300} data={visitDurationCount} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-          <Line type="monotone" dataKey="count" stroke="blue" strokeWidth={3} />
-          <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-          <XAxis dataKey="name" stroke="#222222" >
-            <Label value="Durée en jours" position="insideBottom" />
-          </XAxis>
-          <YAxis stroke="#222222">
-            <Label value="Nombre d'échanges" angle={270} position='insideLeft' style={{ textAnchor: 'middle' }}/>
-          </YAxis>
-        </LineChart>
-
-        <BarChart width={600} height={300} data={topKCities} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-          <Bar dataKey="count" fill="blue" barSize={30} />
-          <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-          <XAxis dataKey="name" stroke="#222222" >
-            <Label value="Villes" position="insideBottom" />
-          </XAxis>
-          <YAxis stroke="#222222">
-            <Label value="Nombre d'échanges" angle={270} position='insideLeft' style={{ textAnchor: 'middle' }}/>
-          </YAxis>
-        </BarChart>
-
-        <BarChart width={600} height={300} data={topKCountries} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-          <Bar dataKey="count" fill="blue" barSize={30} />
-          <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-          <XAxis dataKey="name" stroke="#222222" >
-            <Label value="Pays" position="insideBottom" />
-          </XAxis>
-          <YAxis stroke="#222222">
-            <Label value="Nombre d'échanges" angle={270} position='insideLeft' style={{ textAnchor: 'middle' }}/>
-          </YAxis>
-        </BarChart>
+        <GraphList visitDurationCount={visitDurationCount} topKCities={topKCities} topKCountries={topKCountries}/>
       </div>
     </div>
-    
+      :
+      null}
+    </div>
   );
 }
 

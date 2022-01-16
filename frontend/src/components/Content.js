@@ -53,19 +53,12 @@ function Content(props) {
   }, [])
 
     return (
-      <div
-        style={{
-          position: "absolute",
-          zIndex: 0,
-          width: "100%", // or you can use width: '100vw'
-          height: "100%" // or you can use height: '100vh'
-        }}
-        id="Content"
+      <div  id="Content"
       >
         <div>
           <div id="groupBox">
             <div id="groupBox2">
-              <Info id="Info" setCountries={setCountriesFun} setRange={setRange} exchanges={exchanges}/>
+              <Info id="Info" logged={props.logged} setCountries={setCountriesFun} setRange={setRange} exchanges={exchanges}/>
               <Map id="Map" exchanges={exchanges}/>
             </div>
           </div>
