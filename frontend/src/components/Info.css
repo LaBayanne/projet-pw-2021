@@ -73,6 +73,10 @@
     scroll-snap-type: x mandatory;
 }
 
+#durationInput{
+    color: black;
+}
+
 
 #chart {
     width: 600px;
@@ -82,6 +86,7 @@
 #selectPays{
     margin-top: 15%;
     margin-bottom: 10%;
+    color: black
 }
 
 #RadioButtons{
