@@ -4,14 +4,14 @@ services:
   back:
     build: backend/
     image: docker_back
-    command: sh -c "cd .. && ls && npm install && npm start"
+    command: sh -c "cd .. && npm install && npm start"
     ports:
       - 3001:3001
 
   front:
     build: frontend/
     image: docker_front
-    command: sh -c "cd .. && ls && npm install && npm start"
+    command: sh -c "cd .. && npm install && npm start"
     ports:
       - 3000:3000
     depends_on:
