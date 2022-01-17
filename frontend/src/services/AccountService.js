@@ -1,4 +1,3 @@
-
 const url = "http://localhost:3001/";
 
 export default class AccountService {
@@ -24,16 +23,6 @@ export default class AccountService {
         };
         fetch(url + "account/createAccount", requestOptions)
             .then(callback())
-            .catch(err => err)
-    }
-
-    static populate(){
-        const requestOptions = {
-            method: 'POST', 
-            headers: { 'Content-Type': 'application/json' },
-            mode: 'cors',
-        };
-        fetch(url + "account/populate", requestOptions)
             .catch(err => err)
     }
 }

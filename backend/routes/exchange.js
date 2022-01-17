@@ -7,7 +7,6 @@ pool.connect();
 
 router.use(cors());
 
-//Get all colonne from a kanban
 router.get('/all', async (req,res) => {
     try {
         const response = await pool.query("SELECT * FROM exchange;");

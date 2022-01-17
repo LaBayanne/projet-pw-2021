@@ -15,7 +15,7 @@ export function SignUp({status,setStatus,logged,setLogged}) {
         setMdp("");
     }
 
-    const handleSubmit = (evt) => {
+    const handleSubmit = (evt) => { 
       evt.preventDefault();
 
       const data = {"name":login,"password":mdp};

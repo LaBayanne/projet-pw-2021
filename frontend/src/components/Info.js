@@ -1,7 +1,6 @@
 import React, {useState, useEffect } from 'react';
 import './Info.css';
 
-
 import Select from "react-select";
 
 import Calendar from './Calendar';

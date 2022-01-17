@@ -7,7 +7,7 @@ export function Login({status,setStatus,logged,setLogged,username,setUsername}) 
     const [login, setLogin] = useState("");
     const [mdp, setMdp] = useState("");
 
-    function isAccountRegistered(res){
+    function isAccountCallback(res){
       if(res){
         setLogged(true);
         setUsername(login);
@@ -15,12 +15,12 @@ export function Login({status,setStatus,logged,setLogged,username,setUsername}) 
       }
     }
 
-    const handleSubmit = (evt) => {
+    const attemptConnection = (evt) => {
       evt.preventDefault();
 
       const data = {"name": login, "password": mdp};
 
-      AccountService.isAccount(isAccountRegistered,JSON.stringify(data));
+      AccountService.isAccount(isAccountCallback,JSON.stringify(data));
 
       setLogin("");
       setMdp("");
@@ -30,12 +30,10 @@ export function Login({status,setStatus,logged,setLogged,username,setUsername}) 
       evt.preventDefault();
       
       setStatus(Status.SignUp);
-
-      AccountService.populate();
     }
 
     return (
-        <form onSubmit={handleSubmit} className="Login">
+        <form onSubmit={attemptConnection} className="Login">
           <h2> Sign In </h2>
             <input
               type="text"

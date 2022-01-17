@@ -1,16 +1,18 @@
-version: "3"
+version: "3.7"
+
 services:
-    app:
-        container_name: app
-        restart: always
-        build: ./backend
-        ports:
-            - "3001:3001"
-    client:
-        container_name: client
-        restart: always
-        build: ./frontend
-        ports:
-            - "3000:3000"
-        depends_on:
-            - app
+  back:
+    build: backend/
+    image: docker_back
+    command: sh -c "cd .. && ls && npm install && npm start"
+    ports:
+      - 3001:3001
+
+  front:
+    build: frontend/
+    image: docker_front
+    command: sh -c "cd .. && ls && npm install && npm start"
+    ports:
+      - 3000:3000
+    depends_on:
+      - "back"

@@ -4,10 +4,8 @@ import Status from './ConnectionState';
 
 function Logged({status,setStatus,logged,setLogged,username,setUsername}) {
 
-  const handleSubmit = (evt) => {
+  const disconnect = (evt) => {
     evt.preventDefault();
-
-    //console.log("Event triggered");
 
     setLogged(false);
     setStatus(Status.SignIn);
@@ -15,8 +13,8 @@ function Logged({status,setStatus,logged,setLogged,username,setUsername}) {
 
   return (
     <div className = "Logged">
-      <p id="loggedText"> Connected as: {username} </p>
-      <button onClick={handleSubmit}> Disconnect </button>
+      <p id="loggedText"> Connecté en tant que: {username} </p>
+      <button id="button" onClick={disconnect}> Déconnection </button>
     </div>
     
   );

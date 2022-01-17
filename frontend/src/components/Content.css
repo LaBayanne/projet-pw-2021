@@ -19,3 +19,11 @@
 #Content,#groupBox, #groupBox2{
     min-block-size: fit-content;
 }
+
+#Map{
+    width: 70%;
+}
+
+#Info{
+    width: 30%;
+}

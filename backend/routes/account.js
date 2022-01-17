@@ -9,7 +9,7 @@ pool.connect();
 
 router.use(cors());
 
-router.post('/isAccount/', async (req,res) => {
+router.post('/isAccount', async (req,res) => {
     try {
         const name = req.body.name;
         const passwd = req.body.password;
@@ -41,26 +41,6 @@ router.post('/createAccount', async (req, res) => {
     } catch (error) {
         console.error(error);
     }
-});
-
-router.post('/populate', async (req,res) => {
-
-    /*apps = ['SonsOfAnarchy', 'Illuminati', 'RocketTeam'];
-    
-
-    try {
-        const origin = await axios.get("https://random-data-api.com/api/users/random_user");
-        const destination = await axios.get("https://random-data-api.com/api/users/random_user");
-        const app = Math.floor(Math.random() * 3);
-        const bdate= Math.floor(Math.random() * 31).toString() + "-" + Math.floor(Math.random() * 13).toString() + "-201" + Math.floor(Math.random() * 10).toString(); 
-        const edate= Math.floor(Math.random() * 31).toString() + "-" + Math.floor(Math.random() * 13).toString() + "-202" + Math.floor(Math.random() * 10).toString();
-
-        await pool.query("INSERT INTO exchange (person_name,starting_date,ending_date,attached_team,country_destination,country_origin,city_destination,city_origin) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)", [origin["data"]["last_name"],bdate,edate,app,destination["data"]["address"]["country"],origin["data"]["address"]["country"],destination["data"]["address"]["city"],origin["data"]["address"]["city"]]);
-        console.log("Entered");
-        res.end();
-    } catch(err) {
-        console.log("error: ", err);
-    }*/
 });
 
 module.exports = router;

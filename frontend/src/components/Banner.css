@@ -10,8 +10,6 @@
     border-bottom: solid 1px;
 }
 
-
-
 .title{
     text-align: left;
     vertical-align: middle;
@@ -21,6 +19,6 @@
 }
 
 .title p {
-    font-size: 80px;
+    font-size: 5vw;
     font-weight: bold;
 }
