@@ -9,6 +9,31 @@ pool.connect();
 
 router.use(cors());
 
+<<<<<<< HEAD
+=======
+/**
+ * @openapi
+ * /isAccount:
+ *   post:
+ *     description: Check if account exist in database
+ *     responses:
+ *       '200':
+ *         description: Return true if account exists, otherwise return false
+ *   parameters:
+ *     - name: 'name'
+ *       in: 
+ *         'path'
+ *       description: name of the account
+ *       required: 
+ *         'true'
+ *     - name: password
+ *       in: 
+ *         'path'
+ *       description: password of the account
+ *       required: 
+ *         'true'
+ */
+>>>>>>> b0da785751d796030af18de6c189f2ebf77438dd
 router.post('/isAccount', async (req,res) => {
     try {
         const name = req.body.name;
@@ -29,6 +54,28 @@ router.post('/isAccount', async (req,res) => {
     }
 });
 
+/**
+ * @openapi
+ * /createAccount:
+ *   post:
+ *     description: Create account in database
+ *     responses:
+ *       '200':
+ *         description: Creation response
+ *   parameters:
+ *     - name: 'name'
+ *       in: 
+ *         'path'
+ *       description: name of the account
+ *       required: 
+ *         'true'
+ *     - name: password
+ *       in: 
+ *         'path'
+ *       description: password of the account
+ *       required: 
+ *         'true'
+ */
 router.post('/createAccount', async (req, res) => {
     try {
         const name = req.body.name;
@@ -43,4 +90,11 @@ router.post('/createAccount', async (req, res) => {
     }
 });
 
+<<<<<<< HEAD
+=======
+router.post('/populate', async (req,res) => {
+
+});
+
+>>>>>>> b0da785751d796030af18de6c189f2ebf77438dd
 module.exports = router;

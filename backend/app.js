@@ -5,17 +5,43 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors');
 
-
-var indexRouter = require('./routes/index');
 const exchange = require("./routes/exchange");
 const account = require("./routes/account");
 
+const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+
 var app = express();
+
+
+const options = {
+    definition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'Erasmus Map REST API',
+            description: "A REST API built with Express and PostgreSql for a map showing international erasmus exchanges.",
+            version: '0.1',
+        },
+        servers: [
+            {
+                url: 'http://localhost:3001/api',
+                description: 'Development server',
+            },
+        ],
+    },
+    apis: ["./routes/*.js"],
+}
+
+
 
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
+
+// swagger
+const openapiSpecification = swaggerJsDoc(options);
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(openapiSpecification));
 
 app.use(cors());
 app.use(logger('dev'));

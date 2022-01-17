@@ -13,10 +13,15 @@ function Content(props) {
   const [flowType, setFlowType] = useState();
 
   async function setRange(startDateSelected, endDateSelected){
-    const startDateObj = new Date(startDateSelected);
-    const endDateObj = new Date(endDateSelected);
-    setStartDate(startDateObj);
-    setEndDate(endDateObj);
+    let startDateObj = null, endDateObj = null;
+    if(startDateSelected != null){
+      startDateObj = new Date(startDateSelected);
+      setStartDate(startDateObj);
+    }
+    if(endDateSelected != null){
+      endDateObj = new Date(endDateSelected);
+      setEndDate(endDateObj);
+    }
     setExchangesWithOptions(countries, flowType, startDateObj, endDateObj);
   }
 
