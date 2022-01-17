@@ -7,8 +7,6 @@ pool.connect();
 
 router.use(cors());
 
-<<<<<<< HEAD
-=======
 /**
  * @openapi
  * /all:
@@ -18,7 +16,6 @@ router.use(cors());
  *       '200':
  *         description: Returns the whole set of exchanges
  */
->>>>>>> b0da785751d796030af18de6c189f2ebf77438dd
 router.get('/all', async (req,res) => {
     try {
         const response = await pool.query("SELECT * FROM exchange;");

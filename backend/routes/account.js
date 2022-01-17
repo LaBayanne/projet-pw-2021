@@ -9,8 +9,6 @@ pool.connect();
 
 router.use(cors());
 
-<<<<<<< HEAD
-=======
 /**
  * @openapi
  * /isAccount:
@@ -33,7 +31,6 @@ router.use(cors());
  *       required: 
  *         'true'
  */
->>>>>>> b0da785751d796030af18de6c189f2ebf77438dd
 router.post('/isAccount', async (req,res) => {
     try {
         const name = req.body.name;
@@ -90,11 +87,4 @@ router.post('/createAccount', async (req, res) => {
     }
 });
 
-<<<<<<< HEAD
-=======
-router.post('/populate', async (req,res) => {
-
-});
-
->>>>>>> b0da785751d796030af18de6c189f2ebf77438dd
 module.exports = router;
