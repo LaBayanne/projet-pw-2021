@@ -1,6 +1,9 @@
-FROM node:12-alpine
-RUN apk add --no-cache npm
-COPY . .
-RUN yarn install --production
+FROM node:16-alpine
+RUN mkdir -p /app
+RUN mkdir -p /app/backend
+WORKDIR /app/backend
+COPY package*.json ./
 RUN npm install
-CMD ["npm", "start"]
+COPY . .
+EXPOSE 3001
+CMD [ "npm", "start"]
