@@ -137,20 +137,20 @@ function Info(props) {
           switch(flowType){
             case "in":
               city.push(element.city_destination);
-              if(countriesSelected == null || countriesSelected.includes(element.country_destination))
+              if(countriesSelected == null || countriesSelected.length == 0 || countriesSelected.includes(element.country_destination))
                 country.push(element.country_destination);
               break;
             case "out":
               city.push(element.city_origin);
-              if(countriesSelected == null || countriesSelected.includes(element.country_origin))
+              if(countriesSelected == null || countriesSelected.length == 0 || countriesSelected.includes(element.country_origin))
                 country.push(element.country_origin);
               break;
             default:
               city.push(element.city_origin);
-              if(countriesSelected == null || countriesSelected.includes(element.country_origin))
+              if(countriesSelected == null || countriesSelected.length == 0 || countriesSelected.includes(element.country_origin))
                 country.push(element.country_origin);
               city.push(element.city_destination);
-              if(countriesSelected == null || countriesSelected.includes(element.country_destination))
+              if(countriesSelected == null || countriesSelected.length == 0 || countriesSelected.includes(element.country_destination))
                 country.push(element.country_destination);
           }
           city.forEach(element => {
@@ -171,6 +171,7 @@ function Info(props) {
           count++;
       });
 
+      console.log(topKCountriesComputing);
       setTopKCities(topKCitiesComputing);
       setTopKCountries(topKCountriesComputing);
 

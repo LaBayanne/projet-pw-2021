@@ -33,7 +33,7 @@ function GraphList (props){
         topKCountriesComputing.forEach(element => topK.push({name: element[0], count: element[1]}))
         setTopKCountries(topK.slice(0, k));
 
-    }, [props.topKCitiesComputing, props.topKCountriesComputing]);
+    }, [props.topKCities, props.topKCountries]);
 
     return (
         <div className = "graphList"> 
